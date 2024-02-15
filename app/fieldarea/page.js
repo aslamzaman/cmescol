@@ -140,7 +140,7 @@ const Fieldarea = () => {
                 <div className="w-full grid gird-cols-1 lg:grid-cols-2 gap-4 pt-4">
                     {data.map((d, i) => {
                         return (
-                            <div className="w-full">
+                            <div className="w-full" key={i}>
                                 <div className="w-full p-4 bg-blue-50">
                                     <h1 className="w-full text-center font-bold">{i + 1}. {d.name}</h1>
                                     <p className="w-full text-center">{d.thana}, {d.district}</p>
