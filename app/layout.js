@@ -1,20 +1,9 @@
 import Link from "next/link";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
-
-const Menubar = () => {
-  return (
-    <>
-      <Link href="/" className="px-2 py-1 text-center leading-4 uppercase">what we do</Link>
-      <Link href="/fieldarea" className="px-2 py-1 text-center leading-4 uppercase">our field area</Link>
-      <Link href="/" className="px-2 py-1 text-center leading-4 uppercase">photo galary</Link>
-      <Link href="/about" className="px-2 py-1 text-center leading-4 uppercase">about us</Link>
-    </>
-  )
-}
-
 
 
 export const metadata = {
@@ -26,53 +15,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="w-screen h-screen inset-0 bg-white overflow-auto">
-
-          <div className="sticky w-full h-[75px] px-6 top-0 flex justify-between items-center bg-white border border-gray-300 shadow-md z-10">
-
-            <div className="flex flex-row items-center space-x-2">
-              <div className="w-[40px]">
-                <Link href="/">
-                  <img className="w-full" src="/images/cmes_logo/cmes.png" alt="CMES Logo" />
-                </Link>
-              </div>
-              <Link href="/">
-                <h1 className="text-xl font-bold text-gray-500 scale-y-150">Centre for Mass Eductaion in Science</h1>
-              </Link>
-            </div>
-
-
-
-            <div className="h-[70px] flex justify-end items-center space-x-1 hidden lg:inline-flex">
-              <Menubar />
-            </div>
-
-
-
-
-          </div>
-
-          <div className="sticky top-[75px] w-full flex justify-center bg-gray-100 z-10">
-            <div className="py-3 flex justify-center items-center space-x-2 lg:hidden inline-flex">
-              <Menubar />
-            </div>
-          </div>
-
-
-
+        <Navbar>
           {children}
-
-
-          <div className="w-full text-center py-16 bg-teal-400">
-            <div className="w-full h-1 my-4 bg-red-500"></div>
-            <p>Center for Mass Education in Science (CMES) is an NGO which was registered by the NGO Affairs Bureau in 1978.</p>
-            <p>Present office address is: House- 5/4, Block- F, Lalmatia, Dhaka- 1207, Bangladesh</p>
-            <p>Web address: www.cmesbd.org; Email: cmesbd@yahoo.com</p>
-          </div>
-
-
-        </div>
-
+        </Navbar>
       </body>
     </html>
   );

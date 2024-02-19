@@ -133,7 +133,7 @@ const Fieldarea = () => {
     ]
 
     return (
-        <div className="w-full px-4 py-20 bg-blue-300">
+        <div className="w-full px-4 py-20 bg-white">
 
             <h1 className="w-full py-10 text-center text-3xl lg:text-6xl font-bold uppercase">Our Field Area</h1>
             <div className="w-full flex flex-col lg:flex-row space-y-4 lg:space-x-4">
@@ -141,7 +141,7 @@ const Fieldarea = () => {
                     {data.map((d, i) => {
                         return (
                             <div className="w-full" key={i}>
-                                <div className="w-full p-4 bg-blue-50">
+                                <div className="w-full p-4">
                                     <h1 className="w-full text-center font-bold">{i + 1}. {d.name}</h1>
                                     <p className="w-full text-center">{d.thana}, {d.district}</p>
                                 </div>
