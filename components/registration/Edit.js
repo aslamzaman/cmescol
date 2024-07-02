@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { TextEn, BtnSubmit, TextDt, DropdownEn } from "@/components/Form";
 import { updateItem, getItems } from "@/lib/LocalDatabase";
-import { formatedDate } from "@/lib/utils";
 import { sortVillage } from "@/lib/utils";
+import { formatedDate, myAge } from "@/lib/utils";
+
 
 
 const Edit = ({ message, id, data }) => {
@@ -23,7 +24,7 @@ const Edit = ({ message, id, data }) => {
 
     const [show, setShow] = useState(false);
     const [villages, setVillages] = useState([]);
-
+    const [msg, setMsg] = useState("");
 
 
     const showEditForm = () => {
@@ -68,7 +69,7 @@ const Edit = ({ message, id, data }) => {
             dob: dob,
             gender: gender,
             disability: disability,
-            disabilityNature: disabilityNature,
+            disabilityNature: disability === 'no' ? 'Not Applicable' : disabilityNature,
             fmName: fmName,
             edn: edn,
             isMarried: isMarried,
@@ -83,6 +84,37 @@ const Edit = ({ message, id, data }) => {
 
     const saveHandler = (e) => {
         e.preventDefault();
+
+        const getHelper = getItems('helper');
+        const age = myAge(dob);
+
+        if (getHelper.data.perticipant === "perticipant") {
+            if (age < 13 || age > 56) {
+                setMsg("Age limit of the participant should be 13 to 56 years.");
+                return false;
+            }
+        } else {
+            if (age < 20 || age > 80) {
+                setMsg("Age limit of parent/community participant should be 20 to 80 years.");
+                return false;
+            }
+        }
+
+        if (disability === 'yes') {
+            if (disabilityNature === 'Not Applicable') {
+                setMsg("Disability is a necessity of nature");
+                return false
+            }
+        }
+
+
+        if (mobile.length < 11) {
+            setMsg("Mobile number is not correct.");
+            return false
+        }
+        //-------------------------------------------
+
+
         try {
             const newObject = createObject();
             const response = updateItem('registration', id, newObject);
@@ -92,15 +124,19 @@ const Edit = ({ message, id, data }) => {
             message("Error saving registration data.");
         } finally {
             setShow(false);
+            setMsg("Participan age range must be 13 to 56 years.");
         }
     }
+
+
+
 
 
     return (
         <>
             {show && (
                 <div className="fixed inset-0 py-16 bg-black bg-opacity-30 backdrop-blur-sm z-10 overflow-auto">
-                    <div className="w-11/12 md:w-1/2 mx-auto mb-10 bg-white border-2 border-gray-300 rounded-md shadow-md duration-300">
+                    <div className="w-11/12 lg:w-3/4 mx-auto mb-10 bg-white border-2 border-gray-300 rounded-md shadow-md duration-300">
                         <div className="px-6 md:px-6 py-2 flex justify-between items-center border-b border-gray-300">
                             <h1 className="text-xl font-bold text-blue-600">Edit Existing Data</h1>
                             <button onClick={closeEditForm} className="w-8 h-8 p-0.5 bg-gray-50 hover:bg-gray-300 rounded-md transition duration-500">
@@ -112,10 +148,11 @@ const Edit = ({ message, id, data }) => {
                         </div>
 
                         <div className="px-6 pb-6 text-black">
+                            <p className="mt-2 text-start text-red-500">** {msg}</p>
                             <form onSubmit={saveHandler} >
-                                <div className="grid grid-cols-1 gap-4 my-4">
+                                <div className="grid grid-cols-2 gap-4 my-4">
                                     <TextEn Title="Name" Id="name" Change={e => setName(e.target.value)} Value={name} Chr={100} />
-                                    <TextDt Title="Dob" Id="dob" Change={e => setDob(e.target.value)} Value={dob} />
+                                    <TextDt Title="Date of Birth" Id="dob" Change={e => setDob(e.target.value)} Value={dob} />
                                     <DropdownEn Title="Gender" Id="gender" Change={e => setGender(e.target.value)} Value={gender}>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
@@ -125,7 +162,7 @@ const Edit = ({ message, id, data }) => {
                                         <option value="yes">Yes</option>
                                     </DropdownEn>
 
-                                    <DropdownEn Title="Disabilitynature" Id="disabilityNature" Change={e => setDisabilityNature(e.target.value)} Value={disabilityNature}>
+                                    <DropdownEn Title="Disability Nature" Id="disabilityNature" Change={e => setDisabilityNature(e.target.value)} Value={disabilityNature}>
                                         <option value="Physical">Physical</option>
                                         <option value="Speech">Speech</option>
                                         <option value="Mobility">Mobility</option>
@@ -163,7 +200,10 @@ const Edit = ({ message, id, data }) => {
                                         <option value="Basic mobile phone">Basic mobile phone</option>
                                         <option value="Smart phone">Smart phone</option>
                                     </DropdownEn>
-                                    <TextEn Title="Mobile" Id="mobile" Change={e => setMobile(e.target.value)} Value={mobile} Chr={50} />
+
+
+                                    <TextEn Title="Mobile" Id="mobile" Change={e => setMobile(e.target.value)} Value={mobile} Chr={11} />
+
 
                                     <DropdownEn Title="Village" Id="village" Change={e => setVillage(e.target.value)} Value={village}>
                                         {villages.length ? villages.map(village => <option value={village.name} key={village.id}>{village.name}</option>) : null}

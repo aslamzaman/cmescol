@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
 import XlsxPopulate from 'xlsx-populate';
 import { partnerDropdown, submitDropdown, quarterDropdown, regionDropdown, genderDropdown, disabilityDropdown, highestEducationDropdown, maritalDropdown, employeeDropdown, religionDropdown, languageDropdown, deviceDropdown, villageDropdown } from '@/lib/dropdown';
-import { formatedDate, myAge } from '@/lib/utils';
 
+import { formatedDate, myAge } from '@/lib/utils';
 
 
 export const POST = async (Request) => {
     try {
         const registration = await Request.json();
-        console.log(registration);
+      //  console.log(registration);
 
 
 
@@ -254,7 +254,7 @@ export const POST = async (Request) => {
         sheet.cell('M2').value("Nature of disability *").style({ fill: 'bfdbf5', horizontalAlignment: 'center', verticalAlignment: 'center' });
         sheet.cell('N2').value("Parents full name (both if possible) *").style({ fill: 'bfdbf5', horizontalAlignment: 'center', verticalAlignment: 'center' });
         sheet.cell('O2').value("Highest level of education *").style({ fill: 'bfdbf5', horizontalAlignment: 'center', verticalAlignment: 'center' });
-        sheet.cell('P2').value("FIf Highest level of education Other (please specify):").style({ fill: 'bfdbf5', horizontalAlignment: 'center', verticalAlignment: 'center' });
+        sheet.cell('P2').value("If Highest level of education Other (please specify):").style({ fill: 'bfdbf5', horizontalAlignment: 'center', verticalAlignment: 'center' });
         sheet.cell('Q2').value("What is your marital status? *").style({ fill: 'bfdbf5', horizontalAlignment: 'center', verticalAlignment: 'center' });
         sheet.cell('R2').value("If marital status Other (please specify):").style({ fill: 'bfdbf5', horizontalAlignment: 'center', verticalAlignment: 'center' });
         sheet.cell('S2').value("What is your employment status? *").style({ fill: 'bfdbf5', horizontalAlignment: 'center', verticalAlignment: 'center' });
@@ -271,11 +271,34 @@ export const POST = async (Request) => {
 
 
         sheet.range("A3:AB3").style({ fill: 'bfdbf5' });
-        sheet.column("A").width(48);
-        sheet.column("B").width(30);
-        sheet.column("C").width(18);
-        sheet.column("D").width(80);
-        sheet.column("E").width(35);
+        sheet.column("A").width(46);
+        sheet.column("B").width(22);
+        sheet.column("C").width(17);
+        sheet.column("D").width(18.5);
+        sheet.column("E").width(15);
+        sheet.column("F").width(18);
+        sheet.column("G").width(64);
+        sheet.column("H").width(17);
+        sheet.column("I").width(11.5);
+        sheet.column("J").width(6.5);
+        sheet.column("K").width(9.5);
+        sheet.column("L").width(22.5);
+        sheet.column("M").width(20);
+        sheet.column("N").width(35);
+        sheet.column("O").width(25.5);
+        sheet.column("P").width(50);
+        sheet.column("Q").width(28);
+        sheet.column("R").width(36);
+        sheet.column("S").width(32.5);
+        sheet.column("T").width(42);
+        sheet.column("U").width(22.5);
+        sheet.column("V").width(30.5);
+        sheet.column("W").width(30.5);
+        sheet.column("X").width(32.5);
+        sheet.column("Y").width(41);
+        sheet.column("Z").width(37);
+        sheet.column("AA").width(33.5);
+        sheet.column("AB").width(25);
 
         const learnerId = helper.sl;
         const sortName = [
@@ -287,24 +310,24 @@ export const POST = async (Request) => {
             { id: "khaserhat", name: "KHT", area: '   Patuakhali (Barisal, Bangladesh, Asia)' },
             { id: "damkura", name: "DMK", area: '   Pabna (Rajshahi, Bangladesh, Asia)' }
         ]
-/*
-        {
-            "id": 1719908669990,
-            "name": "Mst. Maunjera Khatun",
-            "dob": "2024-07-02",
-            "gender": "Female",
-            "disability": "yes",
-            "disabilityNature": "Mobility",
-            "fmName": "Md.Badsa Alom , Sirin Begum ",
-            "edn": "Secondary",
-            "isMarried": "Single",
-            "employeement": "Unemployed",
-            "religion": "Muslim",
-            "device": "Basic mobile phone",
-            "mobile": "01720025151",
-            "village": "Itakumari Union Khamar Barabhita"
-          }
-*/
+        /*
+                {
+                    "id": 1719908669990,
+                    "name": "Mst. Maunjera Khatun",
+                    "dob": "2024-07-02",
+                    "gender": "Female",
+                    "disability": "yes",
+                    "disabilityNature": "Mobility",
+                    "fmName": "Md.Badsa Alom , Sirin Begum ",
+                    "edn": "Secondary",
+                    "isMarried": "Single",
+                    "employeement": "Unemployed",
+                    "religion": "Muslim",
+                    "device": "Basic mobile phone",
+                    "mobile": "01720025151",
+                    "village": "Itakumari Union Khamar Barabhita"
+                  }
+        */
 
 
         data.forEach((item, i) => {
@@ -322,7 +345,7 @@ export const POST = async (Request) => {
             sheet.cell(`J${i + 4}`).value(`${myAge(item.dob)}`);
             sheet.cell(`K${i + 4}`).value(`${item.gender}`);
             sheet.cell(`L${i + 4}`).value(`${item.disability}`);
-            sheet.cell(`M${i + 4}`).value(`${item.disabilityNature}`);
+            sheet.cell(`M${i + 4}`).value(`${item.disabilityNature === 'Not Applicable' ? ' ' : item.disabilityNature}`);
             sheet.cell(`N${i + 4}`).value(`${item.fmName}`);
             sheet.cell(`O${i + 4}`).value(`${item.edn}`);
             sheet.cell(`P${i + 4}`).value(" ");
@@ -338,7 +361,7 @@ export const POST = async (Request) => {
             sheet.cell(`Z${i + 4}`).value(`${item.mobile}`);
             sheet.cell(`AA${i + 4}`).value(`${item.village}`);
             sheet.cell(`AB${i + 4}`).value(" ");
-          
+
         })
 
 

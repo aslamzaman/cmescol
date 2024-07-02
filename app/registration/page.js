@@ -5,6 +5,19 @@ import Edit from "@/components/registration/Edit";
 import Delete from "@/components/registration/Delete";
 import { getItems } from "@/lib/LocalDatabase";
 import { formatedDate } from "@/lib/utils";
+import { BtnEn } from "@/components/Form";
+
+const sortName = [
+    { id: "suruj", name: "SRJ", area: '   Tangail (Dhaka, Bangladesh, Asia)' },
+    { id: "gobratola", name: "GOB", area: '   Nawabganj (Rajshahi, Bangladesh, Asia)' },
+    { id: "jaldhaka", name: "JAL", area: '   Nilphamari (Rangpur, Bangladesh, Asia)' },
+    { id: "jointapur", name: "JNP", area: '   Sylhet (Sylhet, Bangladesh, Asia)' },
+    { id: "deuty", name: "DUT", area: '   Rangpur (Rangpur, Bangladesh, Asia)' },
+    { id: "khaserhat", name: "KHT", area: '   Patuakhali (Barisal, Bangladesh, Asia)' },
+    { id: "damkura", name: "DMK", area: '   Pabna (Rajshahi, Bangladesh, Asia)' }
+]
+
+
 
 const Registration = () => {
     const [registrations, setRegistrations] = useState([]);
@@ -49,9 +62,6 @@ const Registration = () => {
         }
         setMsg("Please wait...");
 
-
-
-
         try {
             const newData = { helper: getItems('helper').data, data: registrations };
 
@@ -71,12 +81,15 @@ const Registration = () => {
                 a.href = url;
 
                 /* find custom name for file naming */
-                /*
-                const unitName = unitShortName.find(u => u.id === unit);
-                const tradeName = tradeShortName.find(t => t.id === trade);
-                a.download = `Attendance(1212.3)${date_format(dt)}_CMES-${unitName.name}_${tradeName.name}_${quarter}.xlsx`;
-                */
-                a.download = "Registration.xlsx";
+                const unit = newData.helper.unit;
+                const participant = newData.helper.perticipant;
+                const quarter = newData.helper.period;
+
+                const unitName = sortName.find(u => u.id === unit);
+
+                a.download = `Registration(1212.3)${formatedDate(new Date())}_CMES-${unitName.name}_${participant}_${quarter}.xlsx`;
+
+                // a.download = "Registration.xlsx";
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
@@ -86,7 +99,6 @@ const Registration = () => {
                 throw new Error("Failed to create Excel file");
             }
             setMsg("");
-            setIsCursorDisabled(false);
         } catch (error) {
             console.error("Error saving data:", error);
         }
@@ -143,7 +155,7 @@ const Registration = () => {
                                         <td className="text-center py-2 px-4">{registration.disabilityNature}</td>
                                         <td className="text-center py-2 px-4">{registration.edn}</td>
                                         <td className="text-center py-2 px-4">{registration.employeement}</td>
-                                        <td className="h-8 flex justify-end items-center space-x-1 mt-1 mr-2">
+                                        <td className="text-end py-2 px-4">
                                             <Edit message={messageHandler} id={registration.id} data={registrations} />
                                             <Delete message={messageHandler} id={registration.id} data={registrations} />
                                         </td>
@@ -158,7 +170,9 @@ const Registration = () => {
                             )}
                         </tbody>
                     </table>
-                    <button onClick={formSubmitHandler}>.</button>
+                    <div className="flex justify-end w-full mb-20">
+                        <BtnEn Title="Create Registration Sheet" Click={formSubmitHandler} Class="bg-blue-600 hover:bg-blue-800 text-white" />
+                    </div>
                 </div>
             </div>
         </>
