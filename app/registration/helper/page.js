@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { TextEn, BtnSubmit, TextDt, DropdownEn } from "@/components/Form";
+import { TextDt, DropdownEn, TextNum } from "@/components/Form";
 import { useRouter } from 'next/navigation'
 import { formatedDate } from "@/lib/utils";
 
@@ -84,7 +84,7 @@ const Helper = () => {
                                 <option value="perticipant">Perticipant</option>
                                 <option value="older">Parants/Community/Others</option>
                             </DropdownEn>
-                            <TextEn Title="LearnId (Start SL No)" Id="sl" Change={e => setSl(e.target.value)} Value={sl} Chr={3} />
+                            <TextNum Title="LearnId (Start SL No)" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
                             <TextDt Title="Registration Date (mm/dd/yyyy)" Id="dt" Change={e => setDt(e.target.value)} Value={dt} />
                         </div>
                         <div className="w-full lg:w-11/12 mx-auto">

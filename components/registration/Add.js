@@ -22,6 +22,7 @@ const Add = ({ message }) => {
     const [show, setShow] = useState(false);
 
     const [villages, setVillages] = useState([]);
+    const [saveId, setSaveId] = useState("");
 
     const resetVariables = () => {
         setName('');
@@ -48,6 +49,7 @@ const Add = ({ message }) => {
         console.log(unit)
         const v = sortVillage(unit);
         setVillages(v);
+        setSaveId(Date.now());
     }
 
 
@@ -58,7 +60,7 @@ const Add = ({ message }) => {
 
     const createObject = () => {
         return {
-            id: Date.now(),
+            id: saveId,
             name: name,
             dob: dob,
             gender: gender,
@@ -81,7 +83,7 @@ const Add = ({ message }) => {
         try {
             const newObject = createObject();
             const response = addItem('registration', newObject);
-            message(response.message);
+            message(`${response.message}: ${saveId}`);
         } catch (error) {
             console.error("Error saving registration data:", error);
             message("Error saving registration data.");
@@ -124,7 +126,7 @@ const Add = ({ message }) => {
                                         <option value="Mobility">Mobility</option>
                                         <option value="Not Applicable">Not Applicable</option>
                                     </DropdownEn>
-                   
+
                                     <TextEn Title="Father, Mother Name" Id="fmName" Change={e => setFmName(e.target.value)} Value={fmName} Chr={150} />
 
                                     <DropdownEn Title="Education" Id="edn" Change={e => setEdn(e.target.value)} Value={edn}>
@@ -138,7 +140,7 @@ const Add = ({ message }) => {
                                         <option value="Single">Single</option>
                                         <option value="Divorced or separated">Divorced or separated</option>
                                     </DropdownEn>
-                                  
+
 
                                     <DropdownEn Title="Employeement" Id="employeement" Change={e => setEmployeement(e.target.value)} Value={employeement}>
                                         <option value="Unemployed">Unemployed</option>
@@ -157,9 +159,9 @@ const Add = ({ message }) => {
                                         <option value="Smart phone">Smart phone</option>
                                     </DropdownEn>
                                     <TextEn Title="Mobile" Id="mobile" Change={e => setMobile(e.target.value)} Value={mobile} Chr={50} />
-                                   
+
                                     <DropdownEn Title="Village" Id="village" Change={e => setVillage(e.target.value)} Value={village}>
-                                       {villages.length?villages.map(village=><option value={village.name} key={village.id}>{village.name}</option>):null} 
+                                        {villages.length ? villages.map(village => <option value={village.name} key={village.id}>{village.name}</option>) : null}
                                     </DropdownEn>
                                 </div>
 

@@ -33,6 +33,72 @@ const Registration = () => {
     }
 
 
+    const checkChangeHandler = (e) => {
+        const id = e.target.id;
+        setDatas(prev => {
+            return prev.map(p => p.id.toString() === id ? { ...p, isChecked: !p.isChecked } : p)
+        });
+    };
+
+
+    const formSubmitHandler = async (e) => {
+        e.preventDefault();
+        if (registrations.length < 1) {
+            setMsg("No data found!");
+            return false;
+        }
+        setMsg("Please wait...");
+
+
+
+
+        try {
+            const newData = { helper: getItems('helper').data, data: registrations };
+
+            const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/registration`;
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newData)
+            };
+
+            const response = await fetch(apiUrl, requestOptions);
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+
+                /* find custom name for file naming */
+                /*
+                const unitName = unitShortName.find(u => u.id === unit);
+                const tradeName = tradeShortName.find(t => t.id === trade);
+                a.download = `Attendance(1212.3)${date_format(dt)}_CMES-${unitName.name}_${tradeName.name}_${quarter}.xlsx`;
+                */
+                a.download = "Registration.xlsx";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                console.log(`Excel file created and downloaded.`);
+
+            } else {
+                throw new Error("Failed to create Excel file");
+            }
+            setMsg("");
+            setIsCursorDisabled(false);
+        } catch (error) {
+            console.error("Error saving data:", error);
+        }
+    };
+
+
+
+
+
+
+
+
     return (
         <>
             <div className="w-full mb-3 mt-8">
@@ -92,6 +158,7 @@ const Registration = () => {
                             )}
                         </tbody>
                     </table>
+                    <button onClick={formSubmitHandler}>.</button>
                 </div>
             </div>
         </>

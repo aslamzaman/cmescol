@@ -15,6 +15,7 @@ const Delete = ({ message, id, data }) => {
 
     const closeDeleteForm = () => {
         setShow(false);
+        message("Data ready to delete!");
     }
 
 

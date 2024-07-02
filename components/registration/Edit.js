@@ -32,6 +32,7 @@ const Edit = ({ message, id, data }) => {
         const unit = helper.data.unit;
         const v = sortVillage(unit);
         setVillages(v);
+        message('Data ready to edit');
 
 
 
@@ -56,6 +57,7 @@ const Edit = ({ message, id, data }) => {
 
     const closeEditForm = () => {
         setShow(false);
+        message("Data ready");
     };
 
 
