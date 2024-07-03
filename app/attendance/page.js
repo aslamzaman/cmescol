@@ -8,7 +8,8 @@ const date_format = dt => new Date(dt).toISOString().split('T')[0];
 const unitShortName = [
     { id: 'suruj', name: 'SRJ' },
     { id: 'gobratola', name: 'GOB' },
-    { id: 'jaldhaka', name: 'JAL' }
+    { id: 'jaldhaka', name: 'JAL' },
+    { id: 'deuty', name: 'DUT' }
 ]
 
 const tradeShortName = [
@@ -158,6 +159,7 @@ export default function Attendanc() {
                             <option value="suruj">Suruj</option>
                             <option value="gobratola">Gobratola</option>
                             <option value="jaldhaka">Jaldhaka</option>
+                            <option value="deuty">Deuty</option>
                         </DropdownEn>
 
                         <DropdownEn Title="Trade" Id="trade" Change={e => setTrade(e.target.value)} Value={trade}>

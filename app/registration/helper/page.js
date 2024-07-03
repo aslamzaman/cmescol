@@ -82,7 +82,7 @@ const Helper = () => {
 
                             <DropdownEn Title="Select Options" Id="perticipant" Change={e => setPerticipant(e.target.value)} Value={perticipant}>
                                 <option value="perticipant">Perticipant</option>
-                                <option value="older">Parants/Community/Others</option>
+                                <option value="parants">Parants/Community/Others</option>
                             </DropdownEn>
                             <TextNum Title="LearnId (Start SL No)" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
                             <TextDt Title="Registration Date (mm/dd/yyyy)" Id="dt" Change={e => setDt(e.target.value)} Value={dt} />
