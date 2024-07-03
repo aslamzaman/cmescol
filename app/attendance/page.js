@@ -10,7 +10,9 @@ const unitShortName = [
     { id: 'gobratola', name: 'GOB' },
     { id: 'jaldhaka', name: 'JAL' },
     { id: 'deuty', name: 'DUT' },
-    { id: 'khaserhat', name: 'KHT' }
+    { id: 'khaserhat', name: 'KHT' },
+    { id: 'damkura', name: 'DMK' },
+    { id: 'jointiapur', name: 'JNP' }
 ]
 
 const tradeShortName = [
@@ -162,6 +164,8 @@ export default function Attendanc() {
                             <option value="jaldhaka">Jaldhaka</option>
                             <option value="deuty">Deuty</option>
                             <option value="khaserhat">Khaserhat</option>
+                            <option value="damkura">Damkura</option>
+                            <option value="jointiapur">Jointiapur</option>
                         </DropdownEn>
 
                         <DropdownEn Title="Trade" Id="trade" Change={e => setTrade(e.target.value)} Value={trade}>
