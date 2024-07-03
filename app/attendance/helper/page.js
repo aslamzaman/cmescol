@@ -22,7 +22,7 @@ const Certificate = () => {
             let i = 0;
             const myTimer = setInterval(() => {
                 console.log(json[i].name);
-                x.push({ id: Date.now(), unit: 'deuty', code: json[i].name, quart: json[i].quart, trade: json[i].trade })
+                x.push({ id: Date.now(), unit: 'khaserhat', code: json[i].name, quart: json[i].quart, trade: json[i].trade })
                 i = i + 1;
                 if (i >= json.length) {
                     clearInterval(myTimer);
