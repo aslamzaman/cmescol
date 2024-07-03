@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import Add from "@/components/registration/Add";
 import Edit from "@/components/registration/Edit";
 import Delete from "@/components/registration/Delete";
+import Download from "@/components/registration/Download";
+import Upload from "@/components/registration/Upload";
 import { getItems } from "@/lib/LocalDatabase";
 import { formatedDate } from "@/lib/utils";
 import { BtnEn } from "@/components/Form";
@@ -120,6 +122,12 @@ const Registration = () => {
             <div className="px-4 lg:px-6">
                 <p className="w-full text-sm text-red-700">{msg}</p>
                 <div className="p-2 overflow-auto">
+                    <div className="flex justify-end">
+                        <div className="w-[80px] flex justify-center items-center space-x-4">
+                        <Download message={messageHandler} />
+                        <Upload message={messageHandler} />
+                        </div>
+                    </div>
                     <table className="w-full border border-gray-200">
                         <thead>
                             <tr className="w-full bg-gray-200">
