@@ -4,7 +4,7 @@ import * as XLSX from 'xlsx';
 const date_format = dt => new Date(dt).toISOString().split('T')[0];
 
 
-const Certificate = () => {
+const Helper = () => {
 
     const fileChangeHandler = async (e) => {
         const file = e.target.files[0];
@@ -58,4 +58,4 @@ const Certificate = () => {
     );
 }
 
-export default Certificate;
+export default Helper;

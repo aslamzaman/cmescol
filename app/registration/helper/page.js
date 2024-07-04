@@ -73,18 +73,18 @@ const Helper = () => {
                                 <option value="damkura">Damkura</option>
                             </DropdownEn>
 
-                            <DropdownEn Title="Select Qurter" Id="period" Change={e => setPeriod(e.target.value)} Value={period}>
+                            <DropdownEn Title="Select Quarter" Id="period" Change={e => setPeriod(e.target.value)} Value={period}>
                                 <option value="Q1">Quarter-1</option>
                                 <option value="Q2">Quarter-2</option>
                                 <option value="Q3">Quarter-3</option>
                                 <option value="Q4">Quarter-4</option>
                             </DropdownEn>
 
-                            <DropdownEn Title="Select Options" Id="perticipant" Change={e => setPerticipant(e.target.value)} Value={perticipant}>
+                            <DropdownEn Title="Select Options (Who will be registered?)" Id="perticipant" Change={e => setPerticipant(e.target.value)} Value={perticipant}>
                                 <option value="perticipant">Perticipant</option>
                                 <option value="parants">Parants/Community/Others</option>
                             </DropdownEn>
-                            <TextNum Title="LearnId (Start SL No)" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
+                            <TextNum Title="Learner ID (From which number to start)" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
                             <TextDt Title="Registration Date (mm/dd/yyyy)" Id="dt" Change={e => setDt(e.target.value)} Value={dt} />
                         </div>
                         <div className="w-full lg:w-11/12 mx-auto">

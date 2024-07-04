@@ -107,12 +107,6 @@ const Registration = () => {
     };
 
 
-
-
-
-
-
-
     return (
         <>
             <div className="w-full mb-3 mt-8">
@@ -128,6 +122,7 @@ const Registration = () => {
                         <Upload message={messageHandler} />
                         </div>
                     </div>
+                   
                     <table className="w-full border border-gray-200">
                         <thead>
                             <tr className="w-full bg-gray-200">

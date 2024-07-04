@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { TextEn, BtnSubmit, TextDt, DropdownEn } from "@/components/Form";
 import { updateItem, getItems } from "@/lib/LocalDatabase";
+import { formatedDate, myAge, isMobileCorrect } from "@/lib/utils";
 import { sortVillage } from "@/lib/utils";
-import { formatedDate, myAge } from "@/lib/utils";
+
 
 
 
@@ -34,7 +35,6 @@ const Edit = ({ message, id, data }) => {
         const v = sortVillage(unit);
         setVillages(v);
         message('Data ready to edit');
-
 
 
         // ------------------------------------
@@ -108,7 +108,7 @@ const Edit = ({ message, id, data }) => {
         }
 
 
-        if (mobile.length < 11) {
+        if (!isMobileCorrect(mobile)) {
             setMsg("Mobile number is not correct.");
             return false
         }
@@ -126,6 +126,7 @@ const Edit = ({ message, id, data }) => {
             setShow(false);
             setMsg("Participan age range must be 13 to 56 years.");
         }
+        setMsg("");
     }
 
 
@@ -148,11 +149,10 @@ const Edit = ({ message, id, data }) => {
                         </div>
 
                         <div className="px-6 pb-6 text-black">
-                            <p className="mt-2 text-start text-red-500">** {msg}</p>
                             <form onSubmit={saveHandler} >
                                 <div className="grid grid-cols-1 gap-4 my-4">
                                     <TextEn Title="Name" Id="name" Change={e => setName(e.target.value)} Value={name} Chr={100} />
-                                    <TextDt Title="Date of Birth" Id="dob" Change={e => setDob(e.target.value)} Value={dob} />
+                                    <TextDt Title="Date of Birth (mm/dd/yyyy)" Id="dob" Change={e => setDob(e.target.value)} Value={dob} />
                                     <DropdownEn Title="Gender" Id="gender" Change={e => setGender(e.target.value)} Value={gender}>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>

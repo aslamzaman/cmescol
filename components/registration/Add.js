@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { TextEn, BtnSubmit, TextDt, DropdownEn } from "@/components/Form";
 import { addItem, getItems } from "@/lib/LocalDatabase";
-import { formatedDate, myAge } from "@/lib/utils";
+import { formatedDate, myAge, isMobileCorrect } from "@/lib/utils";
 import { sortVillage } from "@/lib/utils";
+
+
 
 const Add = ({ message }) => {
     const [name, setName] = useState('');
@@ -104,10 +106,12 @@ const Add = ({ message }) => {
         }
 
 
-        if(mobile.length < 11){
+        if (!isMobileCorrect(mobile)) {
             setMsg("Mobile number is not correct.");
-            return false 
+            return false
         }
+
+
         //-------------------------------------------
 
 
@@ -124,7 +128,6 @@ const Add = ({ message }) => {
         }
     }
 
-
     return (
         <>
             {show && (
@@ -138,11 +141,12 @@ const Add = ({ message }) => {
                                 </svg>
                             </button>
                         </div>
-                        <div className="px-6 pb-6 text-black">                            
+                        <div className="px-6 pb-6 text-black">
+
                             <form onSubmit={saveHandler}>
                                 <div className="grid grid-cols-1 gap-4 my-4">
                                     <TextEn Title="Name" Id="name" Change={e => setName(e.target.value)} Value={name} Chr={100} />
-                                    <TextDt Title="Date of Birth" Id="dob" Change={e => setDob(e.target.value)} Value={dob} />
+                                    <TextDt Title="Date of Birth (mm/dd/yyyy)" Id="dob" Change={e => setDob(e.target.value)} Value={dob} />
                                     <DropdownEn Title="Gender" Id="gender" Change={e => setGender(e.target.value)} Value={gender}>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
@@ -190,7 +194,7 @@ const Add = ({ message }) => {
                                         <option value="Basic mobile phone">Basic mobile phone</option>
                                         <option value="Smart phone">Smart phone</option>
                                     </DropdownEn>
-                     
+
 
                                     <TextEn Title="Mobile" Id="mobile" Change={e => setMobile(e.target.value)} Value={mobile} Chr={11} />
 
@@ -200,13 +204,13 @@ const Add = ({ message }) => {
                                     </DropdownEn>
                                 </div>
 
-                                    <p className="mt-2 text-start text-red-500">** {msg}</p>
+                                <p className="mt-2 text-start text-red-500">** {msg}</p>
                                 <div className="w-full flex justify-start">
                                     <input type="button" onClick={closeAddForm} value="Close" className="bg-pink-600 hover:bg-pink-800 text-white text-center mt-3 mx-0.5 px-4 py-2 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 cursor-pointer" />
                                     <BtnSubmit Title="Save" Class="bg-blue-600 hover:bg-blue-800 text-white" />
                                 </div>
                             </form>
-                            
+
                         </div>
                     </div>
                 </div>
