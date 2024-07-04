@@ -54,7 +54,7 @@ const Upload = ({ message }) => {
 					</div>
 
 					<div className="px-6 py-6 flex justify-end items-center border-t border-gray-300">
-						<BtnEn Title="Close" Click={() => { setShow(false); Msg("Data ready") }} Class="bg-red-600 hover:bg-red-800 text-white mr-1" />
+						<BtnEn Title="Close" Click={() => { setShow(false); message("Data ready") }} Class="bg-red-600 hover:bg-red-800 text-white mr-1" />
 						<BtnEn Title="Upload" Click={uploadHandler} Class="bg-blue-600 hover:bg-blue-800 text-white" />
 					</div>
 				</div>
