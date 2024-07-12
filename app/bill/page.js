@@ -109,8 +109,8 @@ const Check = () => {
         }
         const splitDetail = detail.split("+");
         const totalCheck = splitDetail.reduce((t, c) => t + parseFloat(c.trim()), 0);
-        console.log(totalCheck);
-        if (parseFloat(taka) != totalCheck && splitDetail.length != imageDatas.length) {
+        console.log(parseFloat(taka), totalCheck, splitDetail.length, imageDatas.length);
+        if (parseFloat(taka) !== totalCheck || splitDetail.length !== imageDatas.length) {
             setMsg("Total taka and breakup taka are not equal");
             return false;
         }
@@ -212,50 +212,54 @@ const Check = () => {
 
     return (
         <>
-            <div className="w-full p-4 bg-red-200 py-6 border-2 rounded-lg shadow-lg overflow-auto">
-                <div className="w-full mb-3 mt-8">
-                    <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">Bill Summary Create</h1>
+            <section id="title" className="w-full">
+                <h1 className="py-7 text-4xl text-center font-bold text-gray-400 uppercase">Bill Summary Create</h1>
+            </section>
+
+            <section className="w-full">
+
+                <div className="w-10/12 mx-auto mt-4">  {/* center div */}
+
                     <h4 className="w-full font-bold text-center text-pink-700">{msg}</h4>
-                </div>
-            </div>
+                    <div className="w-full p-4 bg-red-100 rounded-lg shadow-lg">
+                        <form onSubmit={formSubmitHandler}>
+                            <div className="grid grid-cols-3 gap-4">
+                                <input type="file" onChange={fileChangeHandlerImage} className="w-full px-4 py-4 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300 cursor-pointer" multiple accept=".jpg,.png" />
+                                <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} Value={unit}>
+                                    <option value="damkura">Damkura</option>
+                                    <option value="suruj">Suruj</option>
+                                    <option value="jaldhaka">Jaldhaka</option>
+                                    <option value="khaserhat">Khaserhat</option>
+                                    <option value="gobratola">Gobratola</option>
+                                    <option value="jointapur">Jointapur</option>
+                                </DropdownEn>
+                                <DropdownEn Title="Select Qurter" Change={e => setQ(e.target.value)} Value={q}>
+                                    <option value="Q1">Q1</option>
+                                    <option value="Q2">Q2</option>
+                                    <option value="Q3">Q3</option>
+                                    <option value="Q4">Q4</option>
+                                </DropdownEn>
+                                <DropdownEn Title="Activity" Change={e => setActivity(e.target.value)} Value={activity}>
+                                    <option value="1111.4">1111.4-Training sessions for women and girls</option>
+                                    <option value="1111.5">1111.5-Awareness raising events in communities</option>
+                                    <option value="1122.1">1122.1- Training traditional leaders </option>
+                                </DropdownEn>
+                                <TextDt Title="Bill Date" Change={e => setDt(e.target.value)} Value={dt} />
+                                <TextNum Title="Total Taka" Change={e => setTaka(e.target.value)} Value={taka} />
+                                <div className="w-full col-span-3">
+                                    <TextEn Title={`Type Taka: ${brakeup}`} Change={e => setDetail(e.target.value)} Value={detail} Chr="150" />
+                                </div>
 
-            <div className="p-2 overflow-auto">
-                <div className="w-full lg:w-3/4 mx-auto p-4 mt-6 bg-gray-100 border rounded-lg shadow-lg">
-                    <form onSubmit={formSubmitHandler}>
-                        <div className="grid grid-cols-3 gap-4">
-                            <input type="file" onChange={fileChangeHandlerImage} className="w-full px-4 py-4 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300 cursor-pointer" multiple accept=".jpg,.png" />
-                            <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} Value={unit}>
-                                <option value="damkura">Damkura</option>
-                                <option value="suruj">Suruj</option>
-                                <option value="jaldhaka">Jaldhaka</option>
-                                <option value="khaserhat">Khaserhat</option>
-                                <option value="gobratola">Gobratola</option>
-                                <option value="jointapur">Jointapur</option>
-                            </DropdownEn>
-                            <DropdownEn Title="Select Qurter" Change={e => setQ(e.target.value)} Value={q}>
-                                <option value="Q1">Q1</option>
-                                <option value="Q2">Q2</option>
-                                <option value="Q3">Q3</option>
-                                <option value="Q4">Q4</option>
-                            </DropdownEn>
-                            <DropdownEn Title="Activity" Change={e => setActivity(e.target.value)} Value={activity}>
-                                <option value="1111.4">1111.4-Training sessions for women and girls</option>
-                                <option value="1111.5">1111.5-Awareness raising events in communities</option>
-                                <option value="1122.1">1122.1- Training traditional leaders </option>
-                            </DropdownEn>
-                            <TextDt Title="Bill Date" Change={e => setDt(e.target.value)} Value={dt} />
-                            <TextNum Title="Total Taka" Change={e => setTaka(e.target.value)} Value={taka} />
-                            <div className="w-full col-span-3">
-                                <TextEn Title={`Type Taka: ${brakeup}`} Change={e => setDetail(e.target.value)} Value={detail} Chr="150" />
                             </div>
+                            <div>
+                                <button type="submit" className="text-center mt-5 mx-0.5 px-4 py-1.5 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 bg-blue-700 hover:bg-blue-900 text-white cursor-pointer">Create Bill</button>
+                            </div>
+                        </form>
+                    </div>
 
-                        </div>
-                        <div>
-                            <button type="submit" className="text-center mt-5 mx-0.5 px-4 py-1.5 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 bg-blue-700 hover:bg-blue-900 text-white cursor-pointer">Create Bill</button>
-                        </div>
-                    </form>
                 </div>
-            </div>
+
+            </section>
         </>
     );
 }

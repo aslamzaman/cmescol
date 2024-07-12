@@ -65,39 +65,6 @@ export default function Home() {
 
 
   return (
-
-    <div className="w-full h-auto px-4 mt-12 border-2 rounded-lg shadow-lg">
-
-      <h1 className="text-4xl text-center mt-10 font-bold text-gray-500">Code Generator</h1>
-      <p className="text-red-600 text-center font-bold mt-2">{msg}</p>
-
-      <div className="w-full h-[24250px] p-4 bg-red-300 py-16">
-        <div className="w-full px-4 grid grid-cols-2 gap-4">
-          <TextEn Title="Code" Id="tbl" Change={e => setCode(e.target.value)} Value={code} Chr={20} />
-          <TextNum Title="SL Start" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
-        </div>
-        <div className="px-4 flex justify-start items-center space-x-4">
-          <button onClick={dd} className="text-center mt-5 mx-0.5 px-4 py-1.5 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 bg-blue-700 hover:bg-blue-900 text-white cursor-pointer">Generate</button>
-          <button onClick={clearHandler} className="text-center mt-5 mx-0.5 px-4 py-1.5 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 bg-green-700 hover:bg-green-900 text-white cursor-pointer">Clear All</button>
-        </div>
-
-
-        <div className="w-full px-4 grid grid-cols-6 gap-4 mt-4">
-          <div className="col-span-2">
-            <p>Paste List Here</p>
-            <textarea rows={1000} id="name" name="name" onChange={e => setName(e.target.value)} value={name} required maxLength={500000} className="w-full px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300" />
-          </div>
-
-          <div>
-            <p>Learner ID</p>
-            <textarea rows={1000} id="learnerid" name="learnerid" onChange={e => setLearnerid(e.target.value)} value={learnerid} required maxLength={500000} className="w-full px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300" />
-          </div>
-          <div className="col-span-3">
-            <p>Participant with ID</p>
-            <textarea rows={1000} id="result" name="result" onChange={e => setResult(e.target.value)} value={result} required maxLength={500000} className="w-full px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300" />
-          </div>
-        </div>
-      </div>
-    </div>
+      <section className="w-screen h-[calc(100vh-50px)] bg-cover bg-no-repeat" style={{backgroundImage:"url('/images/cmes_hero_page.png')"}}></section>
   );
 }

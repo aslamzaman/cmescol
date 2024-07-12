@@ -109,75 +109,84 @@ const Registration = () => {
 
     return (
         <>
-            <div className="w-full mb-3 mt-8">
-                <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">Registration</h1>
-                <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
-            </div>
-            <div className="px-4 lg:px-6">
-                <p className="w-full text-sm text-red-700">{msg}</p>
-                <div className="p-2 overflow-auto">
-                    <div className="flex justify-end">
-                        <div className="w-[80px] flex justify-center items-center space-x-4">
-                        <Download message={messageHandler} />
-                        <Upload message={messageHandler} />
+            <section id="title" className="w-full">
+                <h1 className="py-7 text-4xl text-center font-bold text-gray-400 uppercase">Registration</h1>
+            </section>
+
+            <section className="w-full">
+
+                <div className="w-10/12 mx-auto mt-4">
+                    <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
+                    <p className="w-full text-sm text-red-700">{msg}</p>
+
+
+                    <div className="w-full p-4 bg-red-100 rounded-lg shadow-lg overflow-auto">
+
+                        <div className="flex justify-end">
+                            <div className="w-[80px] flex justify-center items-center space-x-4">
+                                <Download message={messageHandler} />
+                                <Upload message={messageHandler} />
+                            </div>
                         </div>
-                    </div>
-                   
-                    <table className="w-full border border-gray-200">
-                        <thead>
-                            <tr className="w-full bg-gray-200">
-                                <th className="text-center border-b border-gray-200 px-4 py-2">SL</th>
-                                <th className="text-center border-b border-gray-200 px-4 py-2">Name</th>
-                                <th className="text-center border-b border-gray-200 px-4 py-2">Disability</th>
-                                <th className="text-center border-b border-gray-200 px-4 py-2">Disabilitynature</th>
-                                <th className="text-center border-b border-gray-200 px-4 py-2">Edn</th>
-                                <th className="text-center border-b border-gray-200 px-4 py-2">Employeement</th>
-                                <th className="w-[100px] font-normal">
-                                    <div className="w-full flex justify-end py-0.5 pr-4">
-                                        <Add message={messageHandler} />
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {registrations.length ? (
-                                registrations.map((registration, i) => (
-                                    <tr className="border-b border-gray-200 hover:bg-gray-100" key={registration.id}>
-                                        <td className="text-center py-2 px-4">{i + 1}</td>
-                                        <td className="text-start py-2 px-4">
-                                            <span className="font-bold">{registration.name}</span>-{registration.gender} <br />
-                                            {registration.fmName} <br />
-                                            {registration.isMarried} <br />
-                                            {registration.dob} <br />
-                                            {registration.village} <br />
-                                            {registration.religion} <br />
-                                            {registration.device} <br />
-                                            {registration.mobile} <br />
-                                        </td>
-                                        <td className="text-center py-2 px-4">{registration.disability}</td>
-                                        <td className="text-center py-2 px-4">{registration.disabilityNature}</td>
-                                        <td className="text-center py-2 px-4">{registration.edn}</td>
-                                        <td className="text-center py-2 px-4">{registration.employeement}</td>
-                                        <td className="text-end py-2 px-4">
-                                            <Edit message={messageHandler} id={registration.id} data={registrations} />
-                                            <Delete message={messageHandler} id={registration.id} data={registrations} />
+
+                        <table className="w-full border border-gray-200">
+                            <thead>
+                                <tr className="w-full bg-gray-200">
+                                    <th className="text-center border-b border-gray-200 px-4 py-2">SL</th>
+                                    <th className="text-center border-b border-gray-200 px-4 py-2">Name</th>
+                                    <th className="text-center border-b border-gray-200 px-4 py-2">Disability</th>
+                                    <th className="text-center border-b border-gray-200 px-4 py-2">Disabilitynature</th>
+                                    <th className="text-center border-b border-gray-200 px-4 py-2">Edn</th>
+                                    <th className="text-center border-b border-gray-200 px-4 py-2">Employeement</th>
+                                    <th className="w-[100px] font-normal">
+                                        <div className="w-full flex justify-end py-0.5 pr-4">
+                                            <Add message={messageHandler} />
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {registrations.length ? (
+                                    registrations.map((registration, i) => (
+                                        <tr className="border-b border-gray-200 hover:bg-gray-100" key={registration.id}>
+                                            <td className="text-center py-2 px-4">{i + 1}</td>
+                                            <td className="text-start py-2 px-4">
+                                                <span className="font-bold">{registration.name}</span>-{registration.gender} <br />
+                                                {registration.fmName} <br />
+                                                {registration.isMarried} <br />
+                                                {registration.dob} <br />
+                                                {registration.village} <br />
+                                                {registration.religion} <br />
+                                                {registration.device} <br />
+                                                {registration.mobile} <br />
+                                            </td>
+                                            <td className="text-center py-2 px-4">{registration.disability}</td>
+                                            <td className="text-center py-2 px-4">{registration.disabilityNature}</td>
+                                            <td className="text-center py-2 px-4">{registration.edn}</td>
+                                            <td className="text-center py-2 px-4">{registration.employeement}</td>
+                                            <td className="text-end py-2 px-4">
+                                                <Edit message={messageHandler} id={registration.id} data={registrations} />
+                                                <Delete message={messageHandler} id={registration.id} data={registrations} />
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={15} className="text-center py-10 px-4">
+                                            Data not available.
                                         </td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={15} className="text-center py-10 px-4">
-                                        Data not available.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                    <div className="flex justify-end w-full mb-20">
-                        <BtnEn Title="Create Registration Sheet" Click={formSubmitHandler} Class="bg-blue-600 hover:bg-blue-800 text-white" />
+                                )}
+                            </tbody>
+                        </table>
+                        <div className="flex justify-end w-full mb-20">
+                            <BtnEn Title="Create Registration Sheet" Click={formSubmitHandler} Class="bg-blue-600 hover:bg-blue-800 text-white" />
+                        </div>
+
                     </div>
                 </div>
-            </div>
+                
+            </section>
         </>
     );
 
