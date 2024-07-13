@@ -36,7 +36,10 @@ const unitArray = [
     }
 ]
 
-
+export const GET = async (Request) => {
+    const ip = Request.ip;
+    return NextResponse.json({ ip: ip });
+};
 
 
 export const POST = async (Request) => {
