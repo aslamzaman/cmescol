@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const [unit, setUnit] = useState("");
+  const [msg, setMsg] = useState("");
 
   const router = useRouter();
 
-
-
   const submitHandler = async (e) => {
     e.preventDefault();
+    setMsg("Please wait...");
     try {
       const apiIp = `https://api.ipify.org`;
       const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/col`;
@@ -33,16 +33,18 @@ export default function Home() {
           router.push("/dashboard");
         }
       }
+      setMsg("");
     } catch (err) {
       console.log(err);
     }
   }
 
   return (
-    <section className="w-screen h-[calc(100vh-50px)] bg-red-100">
-      <div className="w-[500px] h-[400px] pt-[150px] mx-auto">
- 
-          <div className="w-full grid grid-cols-1 gap-4 p-4 bg-gray-200 border-2 border-gray-300 rounded-md shadow-md">
+      <section className="w-screen h-[calc(100vh-50px)] p-4 border">
+
+        <div id="box" className="w-full lg:w-[500px] mx-auto p-4 border border-gray-200 mt-10 lg:mt-40 bg-gray-100 rounded-md shadow-md">
+          <h1 className="w-full py-4 text-2xl text-gray-600 text-center font-bold uppercase underline">cmes col project</h1>
+          <p className="w-full py-2 text-red-400 text-center">{msg}</p>
             <form onSubmit={submitHandler}>
               <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} value={unit}>
                 <option value="suruj">Suruj</option>
@@ -55,9 +57,9 @@ export default function Home() {
               </DropdownEn>
               <BtnSubmit Title="Submit" Class="bg-blue-600 hover:bg-blue-800 text-white mt-6" />
             </form>
-          </div>
- 
-      </div>
-    </section>
+        </div>
+
+      </section>
+   
   );
 }
