@@ -3,6 +3,17 @@ import React, { useState, useEffect } from "react";
 import { TextDt, DropdownEn, TextNum } from "@/components/Form";
 import { useRouter } from 'next/navigation'
 import { formatedDate } from "@/lib/utils";
+const unitShortName = [
+    { id: "suruj", name: "SRJ", area: '   Tangail (Dhaka, Bangladesh, Asia)' },
+    { id: "gobratola", name: "GOB", area: '   Nawabganj (Rajshahi, Bangladesh, Asia)' },
+    { id: "jaldhaka", name: "JAL", area: '   Nilphamari (Rangpur, Bangladesh, Asia)' },
+    { id: "deuty", name: "DUT", area: '   Rangpur (Rangpur, Bangladesh, Asia)' },
+    { id: "khaserhat", name: "KHT", area: '   Patuakhali (Barisal, Bangladesh, Asia)' },
+    { id: "damkura", name: "DMK", area: '   Pabna (Rajshahi, Bangladesh, Asia)' },
+    { id: "jointiapur", name: "JNP", area: '   Sylhet (Sylhet, Bangladesh, Asia)' }
+]
+
+
 
 const Helper = () => {
     const [user, setUser] = useState("");
@@ -15,11 +26,16 @@ const Helper = () => {
 
     useEffect(() => {
         const helperData = localStorage.getItem('helper');
+        const user = sessionStorage.getItem('col_auth');
+        const getShortName = unitShortName.find(u => u.id === user);
+        if (getShortName) {
+            console.log(getShortName.id);
+            setUnit(getShortName.id);
+        }
         if (helperData) {
             const help = JSON.parse(helperData);
             setUser(help.user ? help.user : "Md. Zohurul Haque");
             setPeriod(help.period ? help.period : "Q3");
-            setUnit(help.unit ? help.unit : "suruj");
             setDt(formatedDate(help.dt) ? formatedDate(help.dt) : formatedDate(new Date()));
             setPerticipant(help.perticipant ? help.perticipant : "perticipant");
             setSl(help.sl ? help.sl : '361')
@@ -64,15 +80,6 @@ const Helper = () => {
                                         <option value="Md. Sanaullah">Md. Sanaullah</option>
                                         <option value="Md Shahin  Sarker">Md Shahin  Sarker</option>
                                     </DropdownEn>
-                                    <DropdownEn Title="Select Unit" Id="unit" Change={e => setUnit(e.target.value)} Value={unit}>
-                                        <option value="suruj">Suruj</option>
-                                        <option value="gobratola">Gobratola</option>
-                                        <option value="jaldhaka">Jaldhaka</option>
-                                        <option value="jointapur">Jointapur</option>
-                                        <option value="deuty">Deuty</option>
-                                        <option value="khaserhat">Khaserhat</option>
-                                        <option value="damkura">Damkura</option>
-                                    </DropdownEn>
 
                                     <DropdownEn Title="Select Quarter" Id="period" Change={e => setPeriod(e.target.value)} Value={period}>
                                         <option value="Q1">Quarter-1</option>
@@ -87,8 +94,8 @@ const Helper = () => {
                                     </DropdownEn>
                                     <TextNum Title="Learner ID (From which number to start)" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
                                     <TextDt Title="Registration Date (mm/dd/yyyy)" Id="dt" Change={e => setDt(e.target.value)} Value={dt} />
-                                </div>
-                                <div className="w-full lg:w-11/12 mx-auto">
+
+
                                     <button type="submit" className="h-[40px] mt-5 text-center mx-0.5 px-4 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 bg-blue-600 hover:bg-blue-800 text-white cursor-pointer">Go to Registration Form</button>
                                 </div>
                             </div>

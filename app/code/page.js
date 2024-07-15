@@ -2,6 +2,20 @@
 import React, { useEffect, useState } from "react";
 import { BtnEn, DropdownEn, TextEn, TextNum } from "@/components/Form";
 
+const unitShortName = [
+  { id: 'suruj', name: 'SRJ' },
+  { id: 'gobratola', name: 'GOB' },
+  { id: 'jaldhaka', name: 'JAL' },
+  { id: 'deuty', name: 'DUT' },
+  { id: 'khaserhat', name: 'KHT' },
+  { id: 'damkura', name: 'DMK' },
+  { id: 'jointiapur', name: 'JNP' }
+]
+
+
+
+
+
 export default function Code() {
   const [sl, setSl] = useState("");
   const [code, setCode] = useState("");
@@ -12,13 +26,12 @@ export default function Code() {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
-    const getCode = localStorage.getItem('logcode');
-    const getSl = localStorage.getItem('logsl');
-    if (getCode) {
-      setCode(getCode);
-    } else {
-      setCode('CMES-SRJ');
+    const user = sessionStorage.getItem('col_auth');
+    const getShortName = unitShortName.find(u => u.id === user);
+    if (getShortName) {
+      setCode(`CMES-${getShortName.name}`);
     }
+    const getSl = localStorage.getItem('logsl');
     //---------------------------------------
     if (getSl) {
       setSl(getSl);
@@ -73,19 +86,16 @@ export default function Code() {
 
       <section className="w-full">
 
-       <div className="w-10/12 mx-auto mt-4">  {/* center div */}
+        <div className="w-10/12 mx-auto mt-4">  {/* center div */}
           <p className="text-red-600 text-center font-bold mt-2">{msg}</p>
 
           <div className="w-full p-4 bg-red-100 rounded-lg shadow-lg">
-            
-            <div className="w-full grid grid-cols-2 gap-4">
-              <TextEn Title="Code" Id="tbl" Change={e => setCode(e.target.value)} Value={code} Chr={20} />
-              <TextNum Title="SL Start" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
-            </div>
-
             <div className="flex justify-start items-center space-x-4">
               <button onClick={dd} className="text-center mt-5 mx-0.5 px-4 py-1.5 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 bg-blue-700 hover:bg-blue-900 text-white cursor-pointer">Generate</button>
               <button onClick={clearHandler} className="text-center mt-5 mx-0.5 px-4 py-1.5 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 bg-green-700 hover:bg-green-900 text-white cursor-pointer">Clear All</button>
+              <div>
+                <TextNum Title="SL Start" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
+              </div>
             </div>
 
 

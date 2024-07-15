@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Connect } from '@/lib/utils/Db';
-import { ColModel } from '@/lib/Models/ColModel';
+import { ColModel } from '@/lib/models/ColModel';
 
 
 

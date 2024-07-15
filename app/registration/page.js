@@ -13,12 +13,11 @@ const sortName = [
     { id: "suruj", name: "SRJ", area: '   Tangail (Dhaka, Bangladesh, Asia)' },
     { id: "gobratola", name: "GOB", area: '   Nawabganj (Rajshahi, Bangladesh, Asia)' },
     { id: "jaldhaka", name: "JAL", area: '   Nilphamari (Rangpur, Bangladesh, Asia)' },
-    { id: "jointapur", name: "JNP", area: '   Sylhet (Sylhet, Bangladesh, Asia)' },
     { id: "deuty", name: "DUT", area: '   Rangpur (Rangpur, Bangladesh, Asia)' },
     { id: "khaserhat", name: "KHT", area: '   Patuakhali (Barisal, Bangladesh, Asia)' },
-    { id: "damkura", name: "DMK", area: '   Pabna (Rajshahi, Bangladesh, Asia)' }
+    { id: "damkura", name: "DMK", area: '   Pabna (Rajshahi, Bangladesh, Asia)' },
+    { id: "jointiapur", name: "JNP", area: '   Sylhet (Sylhet, Bangladesh, Asia)' }
 ]
-
 
 
 const Registration = () => {
@@ -48,14 +47,6 @@ const Registration = () => {
     }
 
 
-    const checkChangeHandler = (e) => {
-        const id = e.target.id;
-        setDatas(prev => {
-            return prev.map(p => p.id.toString() === id ? { ...p, isChecked: !p.isChecked } : p)
-        });
-    };
-
-
     const formSubmitHandler = async (e) => {
         e.preventDefault();
         if (registrations.length < 1) {
@@ -66,7 +57,7 @@ const Registration = () => {
 
         try {
             const newData = { helper: getItems('helper').data, data: registrations };
-
+            console.log(newData);
             const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/registration`;
             const requestOptions = {
                 method: "POST",
@@ -88,6 +79,7 @@ const Registration = () => {
                 const quarter = newData.helper.period;
 
                 const unitName = sortName.find(u => u.id === unit);
+                console.log("unit object", unitName);
 
                 a.download = `Registration(1212.3)${formatedDate(new Date())}_CMES-${unitName.name}_${participant}_${quarter}.xlsx`;
 
@@ -185,7 +177,7 @@ const Registration = () => {
 
                     </div>
                 </div>
-                
+
             </section>
         </>
     );

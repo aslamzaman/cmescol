@@ -8,8 +8,7 @@ import { formatedDate, myAge } from '@/lib/utils';
 export const POST = async (Request) => {
     try {
         const registration = await Request.json();
-      //  console.log(registration);
-
+        console.log(registration);
 
 
         const workbook = await XlsxPopulate.fromBlankAsync();
@@ -305,7 +304,7 @@ export const POST = async (Request) => {
             { id: "suruj", name: "SRJ", area: '   Tangail (Dhaka, Bangladesh, Asia)' },
             { id: "gobratola", name: "GOB", area: '   Nawabganj (Rajshahi, Bangladesh, Asia)' },
             { id: "jaldhaka", name: "JAL", area: '   Nilphamari (Rangpur, Bangladesh, Asia)' },
-            { id: "jointapur", name: "JNP", area: '   Sylhet (Sylhet, Bangladesh, Asia)' },
+            { id: "jointiapur", name: "JNP", area: '   Sylhet (Sylhet, Bangladesh, Asia)' },
             { id: "deuty", name: "DUT", area: '   Rangpur (Rangpur, Bangladesh, Asia)' },
             { id: "khaserhat", name: "KHT", area: '   Patuakhali (Barisal, Bangladesh, Asia)' },
             { id: "damkura", name: "DMK", area: '   Pabna (Rajshahi, Bangladesh, Asia)' }

@@ -38,7 +38,12 @@ export default function Attendanc() {
 
 
     useEffect(() => {
-        setUnit(localStorage.getItem('unit') ? localStorage.getItem('unit') : "");
+        const user = sessionStorage.getItem('col_auth');
+        const getShortName = unitShortName.find(u => u.id === user);
+        if (getShortName) {
+            console.log(getShortName.id)
+            setUnit(getShortName.id);
+        }
         setQuarter(localStorage.getItem('quarter') ? localStorage.getItem('quarter') : "");
         setTrade(localStorage.getItem('trade') ? localStorage.getItem('trade') : "");
         setUser(localStorage.getItem('user') ? localStorage.getItem('user') : "");
@@ -148,12 +153,13 @@ export default function Attendanc() {
 
             <section className="w-full">
 
-                <div className="w-10/12 mx-auto mt-4">  {/* center div */}
+                <div className="w-full lg:w-10/12 mx-auto mt-4 p-4">  {/* center div */}
                     <p className="py-2 text-xl text-center text-red-700">{msg}</p>
 
                     <div className="w-full p-4 bg-red-100 rounded-lg shadow-lg overflow-auto">
                         <form onSubmit={searchHandler}>
-                            <div className="grid grid-cols-3 lg:grid-cols-6 gap-x-3">
+                            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+
                                 <DropdownEn Title="Select User" Id="perticipant" Change={e => setUser(e.target.value)} Value={user}>
                                     <option value="Md. Zohurul Haque">Md. Zohurul Haque</option>
                                     <option value="Zakia Akter">Zakia Akter</option>
@@ -164,15 +170,6 @@ export default function Attendanc() {
                                     <option value="Md. Mizanur Rahman">Md. Mizanur Rahman</option>
                                     <option value="Md. Sanaullah">Md. Sanaullah</option>
                                     <option value="Md Shahin  Sarker">Md Shahin  Sarker</option>
-                                </DropdownEn>
-                                <DropdownEn Title="Select Unit" Id="perticipant" Change={e => setUnit(e.target.value)} Value={unit}>
-                                    <option value="suruj">Suruj</option>
-                                    <option value="gobratola">Gobratola</option>
-                                    <option value="jaldhaka">Jaldhaka</option>
-                                    <option value="deuty">Deuty</option>
-                                    <option value="khaserhat">Khaserhat</option>
-                                    <option value="damkura">Damkura</option>
-                                    <option value="jointiapur">Jointiapur</option>
                                 </DropdownEn>
 
                                 <DropdownEn Title="Trade" Id="trade" Change={e => setTrade(e.target.value)} Value={trade}>
@@ -189,7 +186,8 @@ export default function Attendanc() {
                                 </DropdownEn>
 
                                 <TextDt Title="Atte. Date (mm/dd/yyyy)" Id="dt" Change={e => setDt(e.target.value)} Value={dt} />
-                                <div className="w-full flex justify-end">
+
+                                <div className="w-[90px] flex justify-end">
                                     <button type="submit" className="h-[40px] mt-5 text-center mx-0.5 px-4 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 bg-blue-600 hover:bg-blue-800 text-white cursor-pointer">Search</button>
                                 </div>
                             </div>

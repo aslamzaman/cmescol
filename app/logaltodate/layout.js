@@ -1,4 +1,4 @@
-
+import Layout from "@/components/Layout"
   
     
 export const metadata = {
@@ -8,6 +8,6 @@ export const metadata = {
 
 
 export default function DatelogalotLayout({ children }) {
-    return <>{children}</>  
+    return <Layout>{children}</Layout>  
 }
 

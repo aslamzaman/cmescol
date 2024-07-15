@@ -1,13 +1,13 @@
 import Layout from "@/components/Layout"
-    
+  
     
 export const metadata = {
-  title: 'Bill Create',
+  title: 'Dashboard corrction',
   description: 'Apps created by Aslam Zaman',
 }
 
 
-export default function BillCreateLayout({ children }) {
+export default function DashboardLayout({ children }) {
     return <Layout>{children}</Layout>  
 }
 
