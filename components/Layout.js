@@ -47,8 +47,10 @@ const Layout = ({ children }) => {
                     <Link href="/registration/helper" className="text-white hover:text-gray-500 font-bold cursor-pointer decoration-4">Registration</Link>
                     <Link href="/bill" className="text-white hover:text-gray-500 font-bold cursor-pointer decoration-4">Bill Generate</Link>
                 </div>
-                <div className="w-[calc(100vw-160px)] lg:w-[calc(100vw-250px)] text-sm lg:text-base">{children}</div>
-                <div className="w-full h-[100px]"></div>
+                <div className="w-[calc(100vw-160px)] lg:w-[calc(100vw-250px)] text-sm lg:text-base">
+                    {children}
+                    <div className="w-full h-[100px]"></div>
+                </div>
             </section>
 
         </>
