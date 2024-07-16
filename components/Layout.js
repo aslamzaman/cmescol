@@ -49,10 +49,9 @@ const Layout = ({ children }) => {
                 </div>
                 <div className="w-[calc(100vw-160px)] lg:w-[calc(100vw-250px)] text-sm lg:text-base">
                     {children}
-                    <div className="w-full h-[100px]"></div>
+                    <div className="w-full h-[50px]"></div>
                 </div>
             </section>
-
         </>
     )
 }

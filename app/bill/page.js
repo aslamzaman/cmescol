@@ -163,7 +163,7 @@ const Bill = () => {
                     doc.setFont("times", "bold");
                     doc.setFontSize(16);
                     const str = `Bill No: CMES-${unitName.shortName}-${q}-${formatedDate(dt)}-Bill-${billNoTwoDigit}`
-                    
+
                     doc.text(`Bill (Taka): ${splitBlill[i]}/-`, 105, 274, null, null, "center");
                     doc.setFont("times", "normal");
                     doc.setFontSize(12);
@@ -225,7 +225,6 @@ const Bill = () => {
                 </div>
 
             </div>
-
 
         </>
     );
