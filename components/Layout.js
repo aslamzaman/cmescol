@@ -38,7 +38,7 @@ const Layout = ({ children }) => {
                 </div>
             </section>
             <section className="fixed top-[60px] w-screen h-[calc(100vh-60px)] flex justify-between overflow-auto">
-                <div className="w-[160px] lg:w-[250px] p-4 text-sm lg:text-base bg-[#2f2f2fff] flex flex-col justify-start space-y-2">
+                <div className="w-[160px] lg:w-[250px] p-4 text-sm lg:text-base bg-[#2f2f2fff] flex flex-col justify-start space-y-2 overflow-auto">
                     <Link href="/dashboard" className="text-white hover:text-gray-500 font-bold cursor-pointer decoration-4">Home</Link>
                     <Link href="/code" className="text-white hover:text-gray-500 font-bold cursor-pointer decoration-4">Id Generate</Link>
                     <Link href="/logaltodate" className="text-white hover:text-gray-500 font-bold cursor-pointer decoration-4">Date Correction</Link>
@@ -47,7 +47,7 @@ const Layout = ({ children }) => {
                     <Link href="/registration/helper" className="text-white hover:text-gray-500 font-bold cursor-pointer decoration-4">Registration</Link>
                     <Link href="/bill" className="text-white hover:text-gray-500 font-bold cursor-pointer decoration-4">Bill Generate</Link>
                 </div>
-                <div className="w-[calc(100vw-160px)] lg:w-[calc(100vw-250px)] text-sm lg:text-base">
+                <div className="w-[calc(100vw-160px)] lg:w-[calc(100vw-250px)] text-sm lg:text-base overflow-auto">
                     {children}
                     <div className="w-full h-[50px]"></div>
                 </div>
