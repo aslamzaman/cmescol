@@ -49,7 +49,7 @@ const Helper = () => {
 
 
             <div className="w-ful px-4 mx-auto">
-                <div className="w-full p-1 bg-red-100 rounded-lg shadow-lg">
+                <div className="w-full lg:w-7/12 mx-auto p-1 bg-red-100 rounded-lg shadow-lg">
                     <form onSubmit={submitHandler}>
                         <div className="w-full lg:w-11/12 p-4 grid grid-cols-2 gap-4">
                             <DropdownEn Title="Select Quarter" Id="period" Change={e => setPeriod(e.target.value)} Value={period}>
@@ -59,11 +59,11 @@ const Helper = () => {
                                 <option value="Q4">Quarter-4</option>
                             </DropdownEn>
 
-                            <DropdownEn Title="Select Options (Who will be registered?)" Id="perticipant" Change={e => setPerticipant(e.target.value)} Value={perticipant}>
+                            <DropdownEn Title="Select Options" Id="perticipant" Change={e => setPerticipant(e.target.value)} Value={perticipant}>
                                 <option value="perticipant">Perticipant</option>
                                 <option value="parents">Parants/Community/Others</option>
                             </DropdownEn>
-                            <TextNum Title="Learner ID (From which number to start)" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
+                            <TextNum Title="Learner ID (Start from)" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
                             <TextDt Title="Registration Date (mm/dd/yyyy)" Id="dt" Change={e => setDt(e.target.value)} Value={dt} />
 
                             <button type="submit" className="h-[40px] text-center mx-0.5 px-4 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 bg-blue-600 hover:bg-blue-800 text-white cursor-pointer">Go to Registration Form</button>

@@ -139,7 +139,7 @@ export default function Attendanc() {
             </div>
 
             <div className="w-full p-4">
-                <div className="w-full p-4 bg-red-100 rounded-lg shadow-lg overflow-auto">
+                <div className="w-full lg:w-7/12 mx-auto p-4 bg-red-100 rounded-lg shadow-lg overflow-auto">
                     <form onSubmit={searchHandler}>
                         <div className="grid grid-cols-2 gap-4">
 

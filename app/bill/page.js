@@ -140,14 +140,26 @@ const Bill = () => {
 
                         imW = (imgWeight * x) * (3 / 4);
                         imH = (imgHeight * x) * (3 / 4);
-
+                        if (imH > 243) {
+                            imH = 243;
+                        } else {
+                            imH = imH;
+                        }
 
                     } else {
                         imW = imgWeight;
                         imH = imgHeight;
+                        if (imH > 243) {
+                            imH = 243;
+                        } else {
+                            imH = imH;
+                        }
+
                     }
+
+
                     const leftPosition = (210 - imW) / 2;
-                    const topPosition = (297 - imH) / 2;
+                    const topPosition = 24;
 
                     doc.addImage(`${imageDatas[i].url}`, `${imageDatas[i].type}`, leftPosition, topPosition, imW, imH);
 
@@ -194,7 +206,7 @@ const Bill = () => {
 
 
             <div className="w-full p-4">
-                <div className="w-full p-4 bg-red-100 rounded-lg shadow-lg">
+                <div className="w-full lg:w-7/12 mx-auto p-4 bg-red-100 rounded-lg shadow-lg">
                     <form onSubmit={formSubmitHandler}>
                         <div className="grid grid-cols-3 gap-2">
                             <div className="w-full col-span-3">
