@@ -9,20 +9,10 @@ import { getItems } from "@/lib/LocalDatabase";
 import { formatedDate } from "@/lib/utils";
 import { BtnEn } from "@/components/Form";
 
-const sortName = [
-    { id: "suruj", name: "SRJ", area: '   Tangail (Dhaka, Bangladesh, Asia)' },
-    { id: "gobratola", name: "GOB", area: '   Nawabganj (Rajshahi, Bangladesh, Asia)' },
-    { id: "jaldhaka", name: "JAL", area: '   Nilphamari (Rangpur, Bangladesh, Asia)' },
-    { id: "deuty", name: "DUT", area: '   Rangpur (Rangpur, Bangladesh, Asia)' },
-    { id: "khaserhat", name: "KHT", area: '   Patuakhali (Barisal, Bangladesh, Asia)' },
-    { id: "damkura", name: "DMK", area: '   Pabna (Rajshahi, Bangladesh, Asia)' },
-    { id: "jointiapur", name: "JNP", area: '   Sylhet (Sylhet, Bangladesh, Asia)' }
-]
-
 
 const Registration = () => {
     const [registrations, setRegistrations] = useState([]);
-    const [msg, setMsg] = useState("Data ready");
+    const [msg, setMsg] = useState("");
     const [waitMsg, setWaitMsg] = useState("");
 
 
@@ -56,7 +46,8 @@ const Registration = () => {
         setMsg("Please wait...");
 
         try {
-            const newData = { helper: getItems('helper').data, data: registrations };
+            const helperObject = getItems('helper').data;
+            const newData = { helper: helperObject, data: registrations };
             console.log(newData);
             const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/registration`;
             const requestOptions = {
@@ -73,15 +64,8 @@ const Registration = () => {
                 const a = document.createElement('a');
                 a.href = url;
 
-                /* find custom name for file naming */
-                const unit = newData.helper.unit;
-                const participant = newData.helper.perticipant;
-                const quarter = newData.helper.period;
-
-                const unitName = sortName.find(u => u.id === unit);
-                console.log("unit object", unitName);
-
-                a.download = `Registration(1212.3)${formatedDate(new Date())}_CMES-${unitName.name}_${participant}_${quarter}.xlsx`;
+              
+                a.download = `Registration(1212.3)${formatedDate(new Date())}_CMES-${helperObject.unitShortName}_${helperObject.perticipant}_${helperObject.period}.xlsx`;
 
                 // a.download = "Registration.xlsx";
                 document.body.appendChild(a);
@@ -101,26 +85,22 @@ const Registration = () => {
 
     return (
         <>
-            <section id="title" className="w-full">
-                <h1 className="py-7 text-4xl text-center font-bold text-gray-400 uppercase">Registration</h1>
-            </section>
+            <div id="title" className="w-full">
+                <h1 className="py-4 text-3xl text-center font-bold text-gray-400 uppercase">Registration</h1>
+                <p className="text-red-600 text-center font-bold">{msg}</p>
+                <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
+            </div>
 
-            <section className="w-full">
+            <div className="w-full p-4">
+                <div className="w-full p-4 bg-red-100 rounded-lg shadow-lg">
 
-                <div className="w-10/12 mx-auto mt-4">
-                    <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
-                    <p className="w-full text-sm text-red-700">{msg}</p>
-
-
-                    <div className="w-full p-4 bg-red-100 rounded-lg shadow-lg overflow-auto">
-
-                        <div className="flex justify-end">
-                            <div className="w-[80px] flex justify-center items-center space-x-4">
-                                <Download message={messageHandler} />
-                                <Upload message={messageHandler} />
-                            </div>
+                    <div className="flex justify-end">
+                        <div className="w-[80px] flex justify-center items-center space-x-4">
+                            <Download message={messageHandler} />
+                            <Upload message={messageHandler} />
                         </div>
-
+                    </div>
+                    <div className="w-full overflow-auto">
                         <table className="w-full border border-gray-200">
                             <thead>
                                 <tr className="w-full bg-gray-200">
@@ -171,14 +151,12 @@ const Registration = () => {
                                 )}
                             </tbody>
                         </table>
-                        <div className="flex justify-end w-full mb-20">
-                            <BtnEn Title="Create Registration Sheet" Click={formSubmitHandler} Class="bg-blue-600 hover:bg-blue-800 text-white" />
-                        </div>
-
+                    </div>
+                    <div className="flex justify-end w-full my-4">
+                        <BtnEn Title="Create Registration Sheet" Click={formSubmitHandler} Class="bg-blue-600 hover:bg-blue-800 text-white" />
                     </div>
                 </div>
-
-            </section>
+            </div>
         </>
     );
 

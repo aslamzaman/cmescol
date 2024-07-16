@@ -8,7 +8,7 @@ import { formatedDate, myAge } from '@/lib/utils';
 export const POST = async (Request) => {
     try {
         const registration = await Request.json();
-        console.log(registration);
+       // console.log(registration);
 
 
         const workbook = await XlsxPopulate.fromBlankAsync();
@@ -228,7 +228,6 @@ export const POST = async (Request) => {
 
 
 
-
         sheet.range("A1:D1").merged(true);
         sheet.cell('A1').value("Partner information").style({ fill: '5b92e5', horizontalAlignment: 'center', verticalAlignment: 'center' });
 
@@ -299,17 +298,7 @@ export const POST = async (Request) => {
         sheet.column("AA").width(33.5);
         sheet.column("AB").width(25);
 
-        const learnerId = helper.sl;
-        const sortName = [
-            { id: "suruj", name: "SRJ", area: '   Tangail (Dhaka, Bangladesh, Asia)' },
-            { id: "gobratola", name: "GOB", area: '   Nawabganj (Rajshahi, Bangladesh, Asia)' },
-            { id: "jaldhaka", name: "JAL", area: '   Nilphamari (Rangpur, Bangladesh, Asia)' },
-            { id: "jointiapur", name: "JNP", area: '   Sylhet (Sylhet, Bangladesh, Asia)' },
-            { id: "deuty", name: "DUT", area: '   Rangpur (Rangpur, Bangladesh, Asia)' },
-            { id: "khaserhat", name: "KHT", area: '   Patuakhali (Barisal, Bangladesh, Asia)' },
-            { id: "damkura", name: "DMK", area: '   Pabna (Rajshahi, Bangladesh, Asia)' }
-        ]
-        /*
+           /*
                 {
                     "id": 1719908669990,
                     "name": "Mst. Maunjera Khatun",
@@ -328,17 +317,28 @@ export const POST = async (Request) => {
                   }
         */
 
+/*
+{
+    "period": "Q4",
+    "sl": "361",
+    "dt": "2024-07-08",
+    "perticipant": "parants",
+    "unitShortName": "JAL",
+    "area": "   Nilphamari (Rangpur, Bangladesh, Asia)",
+    "userName": "Md. Habibbur Rahman"
+}
+*/
 
+
+        
         data.forEach((item, i) => {
-            const unitSortName = sortName.find(sn => sn.id === helper.unit);
-
             sheet.cell(`A${i + 4}`).value('CMES - Centre for Mass Education in Science (CMES)');
-            sheet.cell(`B${i + 4}`).value(`${helper.user}`);
+            sheet.cell(`B${i + 4}`).value(`${helper.userName}`);
             sheet.cell(`C${i + 4}`).value(`${formatedDate(new Date())}`);
             sheet.cell(`D${i + 4}`).value(`${helper.period}`);
-            sheet.cell(`E${i + 4}`).value(`CMES-${unitSortName.name}-0${parseInt(learnerId) + i}`);
+            sheet.cell(`E${i + 4}`).value(`CMES-${helper.unitShortName}-0${parseInt(helper.sl) + i}`);
             sheet.cell(`F${i + 4}`).value(`${helper.dt}`);
-            sheet.cell(`G${i + 4}`).value(`${unitSortName.area}`);
+            sheet.cell(`G${i + 4}`).value(`${helper.area}`);
             sheet.cell(`H${i + 4}`).value(`${item.name}`);
             sheet.cell(`I${i + 4}`).value(`${formatedDate(item.dob)}`);
             sheet.cell(`J${i + 4}`).value(`${myAge(item.dob)}`);
@@ -360,7 +360,6 @@ export const POST = async (Request) => {
             sheet.cell(`Z${i + 4}`).value(`${item.mobile}`);
             sheet.cell(`AA${i + 4}`).value(`${item.village}`);
             sheet.cell(`AB${i + 4}`).value(" ");
-
         })
 
 

@@ -3,44 +3,9 @@ import { DropdownEn, TextDt, TextEn, TextNum } from "@/components/Form";
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
 import { formatedDate } from "@/lib/utils";
+import { UnitInfo } from "@/lib/data/attendance/UnitInfo";
 
-const unitArray = [
-    {
-        id: "damkura",
-        unit: "Damkura, Rajshahi",
-        short: "DAM"
-    },
-    {
-        id: "suruj",
-        unit: "Suruj, Tangail",
-        short: "SRJ"
-    },
-    {
-        id: "jaldhaka",
-        unit: "Jaldhaka, Nilphamari",
-        short: "JAL"
-    },
-    {
-        id: "khaserhat",
-        unit: "Khaserhat, Patuakhali",
-        short: "KHT"
-    },
-    {
-        id: "gobratola",
-        unit: "Gobratola, Chapainwabganj",
-        short: "GOB"
-    },
-    {
-        id: "jointapur",
-        unit: "Jointapur, Sylhet",
-        short: "JNP"
-    }
-]
-
-
-
-
-const Check = () => {
+const Bill = () => {
     const [imageDatas, setImageDatas] = useState([]);
     const [unit, setUnit] = useState("");
     const [activity, setActivity] = useState("");
@@ -48,7 +13,7 @@ const Check = () => {
     const [detail, setDetail] = useState("");
     const [dt, setDt] = useState("");
     const [q, setQ] = useState("");
-    const [brakeup, setBrakeup] = useState("");
+    const [brakeup, setBrakeup] = useState("0+0+0+0+...");
     const [msg, setMsg] = useState("");
 
 
@@ -89,9 +54,12 @@ const Check = () => {
 
 
     const createObject = () => {
+        const sessionUnit = sessionStorage.getItem('col_auth');
+        const unitName = UnitInfo.find(u => u.id === sessionUnit);
         return {
             imageDatas: imageDatas,
-            unit: unit,
+            unit: unitName.shortName,
+            unitFullName: unitName.name,
             activity: activity,
             taka: taka,
             detail: detail,
@@ -115,6 +83,8 @@ const Check = () => {
             return false;
         }
 
+
+
         const doc = new jsPDF({
             orientation: 'p',
             unit: 'mm',
@@ -125,7 +95,7 @@ const Check = () => {
 
         setMsg("Please wait...");
         try {
-            const untName = unitArray.find(u => u.id === unit);
+
             // Excel part
             const newObject = createObject();
             const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/bill`;
@@ -144,7 +114,9 @@ const Check = () => {
                 a.href = url;
 
                 /* find custom name for file naming */
-                a.download = `Bill-CMES-${untName.short}-${q}-${formatedDate(dt)}.xlsx`;
+                const sessionUnit = sessionStorage.getItem('col_auth');
+                const unitName = UnitInfo.find(u => u.id === sessionUnit);
+                a.download = `Bill-CMES-${unitName.shortName}-${q}-${formatedDate(dt)}.xlsx`;
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
@@ -165,10 +137,11 @@ const Check = () => {
                     let imH = 0;
                     if (imgWeight > 210) {
                         let x = 210 / imgWeight // image and page width ratio                       
-                        let y = 297 / imgHeight // image and page height ratio
 
                         imW = (imgWeight * x) * (3 / 4);
-                        imH = (imgHeight * y) * (3 / 4);
+                        imH = (imgHeight * x) * (3 / 4);
+
+
                     } else {
                         imW = imgWeight;
                         imH = imgHeight;
@@ -178,27 +151,29 @@ const Check = () => {
 
                     doc.addImage(`${imageDatas[i].url}`, `${imageDatas[i].type}`, leftPosition, topPosition, imW, imH);
 
-                    const untName = unitArray.find(u => u.id === unit);
-                    const unitShort = untName.short; // From line 67
                     const billNoTwoDigitString = "0" + (i + 1);
                     const billNoTwoDigit = billNoTwoDigitString.substring(billNoTwoDigitString.length - 2, 2);
 
                     const bills = detail;
                     const splitBlill = bills.split("+");
 
+                    const sessionUnit = sessionStorage.getItem('col_auth');
+                    const unitName = UnitInfo.find(u => u.id === sessionUnit);
+
                     doc.setFont("times", "bold");
                     doc.setFontSize(16);
-                    const str = `Bill No: CMES-${unitShort}-${q}-${formatedDate(dt)}-Bill-${billNoTwoDigit}`
-                    doc.text(`Bill (Taka): ${splitBlill[i]}/-`, 105, 270, null, null, "center");
+                    const str = `Bill No: CMES-${unitName.shortName}-${q}-${formatedDate(dt)}-Bill-${billNoTwoDigit}`
+                    
+                    doc.text(`Bill (Taka): ${splitBlill[i]}/-`, 105, 274, null, null, "center");
                     doc.setFont("times", "normal");
                     doc.setFontSize(12);
-                    doc.text(`Unit: ${untName.unit}`, 105, 277, null, null, "center");
+                    doc.text(`Unit: ${unitName.name}`, 105, 279, null, null, "center");
                     doc.text(`${str}`, 105, 284, null, null, "center");
 
                     doc.addPage("a4", "p");
                 }
                 doc.deletePage(imageDatas.length + 1);
-                doc.save(`PdfBill-CMES-${untName.short}-${q}-${formatedDate(dt)}.pdf`);
+                doc.save(`PDF-Bill-CMES-${unitName.shortName}-${q}-${formatedDate(dt)}.pdf`);
 
             } else {
                 throw new Error("Failed to create Excel file");
@@ -212,56 +187,48 @@ const Check = () => {
 
     return (
         <>
-            <section id="title" className="w-full">
-                <h1 className="py-7 text-4xl text-center font-bold text-gray-400 uppercase">Bill Summary Create</h1>
-            </section>
+            <div id="title" className="w-full">
+                <h1 className="py-4 text-3xl text-center font-bold text-gray-400 uppercase">Bill Generate</h1>
+                <p className="text-red-600 text-center font-bold">{msg}</p>
+            </div>
 
-            <section className="w-full">
 
-                <div className="w-10/12 mx-auto mt-4">  {/* center div */}
-
-                    <h4 className="w-full font-bold text-center text-pink-700">{msg}</h4>
-                    <div className="w-full p-4 bg-red-100 rounded-lg shadow-lg">
-                        <form onSubmit={formSubmitHandler}>
-                            <div className="grid grid-cols-3 gap-4">
-                                <input type="file" onChange={fileChangeHandlerImage} className="w-full px-4 py-4 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300 cursor-pointer" multiple accept=".jpg,.png" />
-                                <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} Value={unit}>
-                                    <option value="damkura">Damkura</option>
-                                    <option value="suruj">Suruj</option>
-                                    <option value="jaldhaka">Jaldhaka</option>
-                                    <option value="khaserhat">Khaserhat</option>
-                                    <option value="gobratola">Gobratola</option>
-                                    <option value="jointapur">Jointapur</option>
-                                </DropdownEn>
-                                <DropdownEn Title="Select Qurter" Change={e => setQ(e.target.value)} Value={q}>
-                                    <option value="Q1">Q1</option>
-                                    <option value="Q2">Q2</option>
-                                    <option value="Q3">Q3</option>
-                                    <option value="Q4">Q4</option>
-                                </DropdownEn>
-                                <DropdownEn Title="Activity" Change={e => setActivity(e.target.value)} Value={activity}>
-                                    <option value="1111.4">1111.4-Training sessions for women and girls</option>
-                                    <option value="1111.5">1111.5-Awareness raising events in communities</option>
-                                    <option value="1122.1">1122.1- Training traditional leaders </option>
-                                </DropdownEn>
-                                <TextDt Title="Bill Date" Change={e => setDt(e.target.value)} Value={dt} />
-                                <TextNum Title="Total Taka" Change={e => setTaka(e.target.value)} Value={taka} />
-                                <div className="w-full col-span-3">
-                                    <TextEn Title={`Type Taka: ${brakeup}`} Change={e => setDetail(e.target.value)} Value={detail} Chr="150" />
-                                </div>
-
+            <div className="w-full p-4">
+                <div className="w-full p-4 bg-red-100 rounded-lg shadow-lg">
+                    <form onSubmit={formSubmitHandler}>
+                        <div className="grid grid-cols-3 gap-2">
+                            <div className="w-full col-span-3">
+                                <input type="file" onChange={fileChangeHandlerImage} className="w-full px-4 py-4 mb-2 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300 cursor-pointer" multiple accept=".jpg,.png" />
+                                <TextEn Title={`Write Taka: ${brakeup}`} Change={e => setDetail(e.target.value)} Value={detail} Chr="150" />
                             </div>
+
+
+                            <DropdownEn Title="Select Qurter" Change={e => setQ(e.target.value)} Value={q}>
+                                <option value="Q1">Q1</option>
+                                <option value="Q2">Q2</option>
+                                <option value="Q3">Q3</option>
+                                <option value="Q4">Q4</option>
+                            </DropdownEn>
+                            <DropdownEn Title="Activity" Change={e => setActivity(e.target.value)} Value={activity}>
+                                <option value="1111.4">1111.4-Training sessions for women and girls</option>
+                                <option value="1111.5">1111.5-Awareness raising events in communities</option>
+                                <option value="1122.1">1122.1- Training traditional leaders </option>
+                            </DropdownEn>
+                            <TextDt Title="Bill Date" Change={e => setDt(e.target.value)} Value={dt} />
+                            <TextNum Title="Total Taka" Change={e => setTaka(e.target.value)} Value={taka} />
                             <div>
                                 <button type="submit" className="text-center mt-5 mx-0.5 px-4 py-1.5 font-semibold rounded-md focus:ring-1 ring-blue-200 ring-offset-2 duration-300 bg-blue-700 hover:bg-blue-900 text-white cursor-pointer">Create Bill</button>
                             </div>
-                        </form>
-                    </div>
 
+                        </div>
+                    </form>
                 </div>
 
-            </section>
+            </div>
+
+
         </>
     );
 }
 
-export default Check;
+export default Bill;

@@ -4,6 +4,7 @@ import { DropdownEn, BtnSubmit } from "@/components/Form";
 import { useRouter } from 'next/navigation'
 
 export default function Home() {
+  const [user, setUser] = useState("");
   const [unit, setUnit] = useState("");
   const [msg, setMsg] = useState("");
 
@@ -30,6 +31,7 @@ export default function Home() {
         if (responseData.ok) {
           console.log("Ok");
           sessionStorage.setItem('col_auth', unit);
+          sessionStorage.setItem('col_user', user);
           router.push("/dashboard");
         }
       }
@@ -40,26 +42,40 @@ export default function Home() {
   }
 
   return (
-      <section className="w-screen h-[calc(100vh-50px)] p-4 border">
+    <section className="w-screen h-[calc(100vh-50px)] p-4 border">
 
-        <div id="box" className="w-full lg:w-[500px] mx-auto p-4 border border-gray-200 mt-10 lg:mt-40 bg-gray-100 rounded-md shadow-md">
-          <h1 className="w-full py-4 text-2xl text-gray-600 text-center font-bold uppercase underline">cmes col project</h1>
-          <p className="w-full py-2 text-red-400 text-center">{msg}</p>
-            <form onSubmit={submitHandler}>
-              <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} value={unit}>
-                <option value="suruj">Suruj</option>
-                <option value="gobratola">Gobratola</option>
-                <option value="jaldhaka">Jaldhaka</option>
-                <option value="deuty">Deuty</option>
-                <option value="khaserhat">Khaserhat</option>
-                <option value="damkura">Damkura</option>
-                <option value="jointiapur">Jointiapur</option>
-              </DropdownEn>
-              <BtnSubmit Title="Submit" Class="bg-blue-600 hover:bg-blue-800 text-white mt-6" />
-            </form>
-        </div>
+      <div id="box" className="w-full lg:w-[500px] mx-auto p-4 border border-gray-200 mt-10 lg:mt-40 bg-gray-100 rounded-md shadow-md">
+        <h1 className="w-full py-4 text-2xl text-gray-600 text-center font-bold uppercase underline">cmes col project</h1>
+        <p className="w-full py-2 text-red-400 text-center">{msg}</p>
+        <form onSubmit={submitHandler}>
+          <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} value={unit}>
+            <option value="suruj">Suruj</option>
+            <option value="gobratola">Gobratola</option>
+            <option value="jaldhaka">Jaldhaka</option>
+            <option value="deuty">Deuty</option>
+            <option value="khaserhat">Khaserhat</option>
+            <option value="damkura">Damkura</option>
+            <option value="jointiapur">Jointiapur</option>
+          </DropdownEn>
 
-      </section>
-   
+          <DropdownEn Title="Select User" Id="user" Change={e => setUser(e.target.value)} Value={user}>
+            <option value="Md. Zohurul Haque">Md. Zohurul Haque</option>
+            <option value="Zakia Akter">Zakia Akter</option>
+            <option value="Aktera Khatun">Aktera Khatun</option>
+            <option value="Sabina Yesmin">Sabina Yesmin</option>
+            <option value="Md. Habibbur Rahman">Md. Habibbur Rahman</option>
+            <option value="Md. Suaibur Rahman">Md. Suaibur Rahman</option>
+            <option value="Md. Mizanur Rahman">Md. Mizanur Rahman</option>
+            <option value="Md. Sanaullah">Md. Sanaullah</option>
+            <option value="Md Shahin  Sarker">Md Shahin  Sarker</option>
+          </DropdownEn>
+
+
+          <BtnSubmit Title="Submit" Class="bg-blue-600 hover:bg-blue-800 text-white mt-6" />
+        </form>
+      </div>
+
+    </section>
+
   );
 }

@@ -2,10 +2,9 @@
 import React from "react";
 
 export default function Dashboard() {
-
-
-  return (
-    <section className="w-screen h-[calc(100vh-50px)] bg-cover bg-no-repeat" style={{ backgroundImage: "url('/images/cmes_hero_page.png')" }}>
-    </section>
+    return (
+    <div className="w-[calc(100vw-160px)] lg:w-[calc(100vw-250px)] h-[calc(100vh-60px)] flex justify-center items-center" >
+    <div className="w-[450px] h-[346px] lg:w-[700px] lg:h-[539px] bg-contain bg-no-repeat bg-center" style={{ backgroundImage: "url('/images/cmes_hero_page.png')" }}></div>
+    </div>
   );
 }
