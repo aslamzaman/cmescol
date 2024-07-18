@@ -35,16 +35,42 @@ const Upload = ({ message }) => {
 
 	const headerArray = ["id", "name", "dob", "gender", "disability", "disabilityNature", "fmName", "edn", "isMarried", "employeement", "religion", "device", "mobile", "village"];
 
+
 	
-	const uploadHandler = () => {
-		const reader = new FileReader();
-		reader.onload = (() => {
-			const jsonData = processExcelData(reader.result, headerArray);
-			const withoutFirstElement = jsonData.slice(1);
-			console.log(withoutFirstElement);
-		})
-		reader.readAsArrayBuffer(file);
-	}
+const uploadHandler = () => {
+    const reader = new FileReader();
+    
+    reader.onload = () => {
+        try {
+            const jsonData = processExcelData(reader.result, headerArray);
+            if (jsonData && jsonData.length > 1) {
+                const withoutFirstElement = jsonData.slice(1);
+                const stringifyData = JSON.stringify(withoutFirstElement);
+                localStorage.setItem("registration", stringifyData);
+                message("Upload successful");
+                console.log("Upload successful");
+            } else {
+                throw new Error("The processed data is invalid or empty.");
+            }
+        } catch (error) {
+            console.error("Error processing Excel data:", error);
+            message("Failed to upload. Please try again.");
+        }
+    };
+
+    reader.onerror = () => {
+        console.error("Error reading the file.");
+        message("Failed to read the file. Please try again.");
+    };
+
+    if (file) {
+        reader.readAsArrayBuffer(file);
+        setShow(false);
+    } else {
+        message("No file selected. Please choose a file to upload.");
+    }
+};
+
 
 
 
@@ -59,7 +85,6 @@ const Upload = ({ message }) => {
 					</div>
 
 					<div className="p-6 text-black">
-						<input type="file" onChange={(e) => { setFile(e.target.files[0]); }} className="w-full px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300" accept="application/javascript" />
 						<input type="file" onChange={fileChangehandler} className="w-full px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
 					</div>
 
