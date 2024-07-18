@@ -1,48 +1,23 @@
 import React from "react";
 import { saveAs } from "file-saver";
-
-import { getItems } from "@/lib/LocalDatabase";
 import * as XLSX from 'xlsx';
-
-
-const saveJsonToExcelSheet = (jsonData) => {
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(jsonData);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1"); // Change "Sheet1" to your desired sheet name
-  XLSX.writeFile(workbook, "data.xlsx"); // Change "data.xlsx" to your desired filename
-}
-
-
-
-
 
 
 const Download = ({ message }) => {
 
 
-  const downloadHandler11111 = () => {
-    let localData = localStorage.getItem("registration");
-    if (localData) {
-      const blob = new Blob([localData], { type: "application/json" });
-      saveAs(blob, `${new Date().toISOString()}-registration.js`);
-      message("Data download successfully.");
-    } else {
-      message("Data not available.");
-    }
+  const saveJsonToExcelSheet = (jsonData) => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(jsonData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1"); // Change "Sheet1" name
+    XLSX.writeFile(workbook, "data.xlsx"); // Change "data.xlsx" filename
   }
 
 
-  const downloadHandler = () => {
-    console.log("aslam")
-    try {
-      let localData = localStorage.getItem("registration");
-      if (localData) {
 
-        saveJsonToExcelSheet(JSON.parse(localData));
-      }
-    } catch (error) {
-      console.error("Error saving data:", error);
-    }
+  const downloadHandler = () => {
+    let localStorageData = localStorage.getItem("registration");
+    saveJsonToExcelSheet(JSON.parse(localStorageData)); // Pure JSON
   }
 
 

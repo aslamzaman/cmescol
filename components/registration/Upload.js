@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { BtnEn } from "../Form";
 import { Close } from "../Icons";
 import * as XLSX from 'xlsx';
+import { data } from "autoprefixer";
 
 
 const processExcelData = (readerResult, headerArray) => {
-	const workbook = XLSX.read(readerResult, { type: "binary" }); // Parse the binary data
-	const sheetName = workbook.SheetNames[0]; // Get the first sheet name (adjust if needed)
+	const workbook = XLSX.read(readerResult, { type: "binary" });
+	const sheetName = workbook.SheetNames[0];
 	const worksheet = workbook.Sheets[sheetName];
-	const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: headerArray }); // Convert sheet to JSON
+	const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: headerArray });
 	return jsonData;
 }
 
@@ -26,50 +27,25 @@ const Upload = ({ message }) => {
 	}
 
 
-	const uploadHandler111 = (e) => {
-		if (file) {
-			const reader = new FileReader();
-			reader.onload = (() => {
-				let checkData = JSON.parse(reader.result)[0];
-				console.log(checkData);
-				if (!checkData.name) {
-					message("Data not match!");
-					setShow(false);
-					return false;
-				};
-
-				localStorage.setItem("registration", reader.result);
-				message("Data loaded successfully");
-				setShow(false);
-			})
-			reader.readAsText(file);
-		} else {
-			message("Please select a file.");
-			setShow(false);
-		}
-	}
-
-
-
 	const fileChangehandler = (e) => {
-		console.log(e.target.files[0]);
 		setFile(e.target.files[0]);
 	}
 
 
-	const uploadHandler = (e) => {
-		if (file) {
-			const reader = new FileReader();
-			reader.onload = (() => {
-				const headerArray = ["id", "name", "dob", "gender", "disability", "disabilityNature", "fmName", "edn", "isMarried", "employeement", "religion", "device", "mobile", "village"];
-				const jsonArray = processExcelData(reader.result, headerArray);
-				console.log("jsonArray",jsonArray);
-			})
-			reader.readAsArrayBuffer(file);
-		} else {
-			console.log("Error!")
-		}
+
+	const headerArray = ["id", "name", "dob", "gender", "disability", "disabilityNature", "fmName", "edn", "isMarried", "employeement", "religion", "device", "mobile", "village"];
+
+	
+	const uploadHandler = () => {
+		const reader = new FileReader();
+		reader.onload = (() => {
+			const jsonData = processExcelData(reader.result, headerArray);
+			const withoutFirstElement = jsonData.slice(1);
+			console.log(withoutFirstElement);
+		})
+		reader.readAsArrayBuffer(file);
 	}
+
 
 
 
