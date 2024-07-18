@@ -1,11 +1,26 @@
 import React from "react";
 import { saveAs } from "file-saver";
 
+import { getItems } from "@/lib/LocalDatabase";
+import * as XLSX from 'xlsx';
+
+
+const saveJsonToExcelSheet = (jsonData) => {
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.json_to_sheet(jsonData);
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1"); // Change "Sheet1" to your desired sheet name
+  XLSX.writeFile(workbook, "data.xlsx"); // Change "data.xlsx" to your desired filename
+}
+
+
+
+
+
 
 const Download = ({ message }) => {
 
 
-  const downloadHandler = () => {
+  const downloadHandler11111 = () => {
     let localData = localStorage.getItem("registration");
     if (localData) {
       const blob = new Blob([localData], { type: "application/json" });
@@ -13,6 +28,20 @@ const Download = ({ message }) => {
       message("Data download successfully.");
     } else {
       message("Data not available.");
+    }
+  }
+
+
+  const downloadHandler = () => {
+    console.log("aslam")
+    try {
+      let localData = localStorage.getItem("registration");
+      if (localData) {
+
+        saveJsonToExcelSheet(JSON.parse(localData));
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
     }
   }
 

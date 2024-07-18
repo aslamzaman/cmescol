@@ -8,7 +8,7 @@ import Upload from "@/components/registration/Upload";
 import { getItems } from "@/lib/LocalDatabase";
 import { formatedDate } from "@/lib/utils";
 import { BtnEn } from "@/components/Form";
-
+ import { village } from "@/lib/utils/villagelist";
 
 const Registration = () => {
     const [registrations, setRegistrations] = useState([]);
@@ -81,6 +81,8 @@ const Registration = () => {
             console.error("Error saving data:", error);
         }
     };
+
+
 
 
     return (

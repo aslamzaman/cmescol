@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { BtnEn } from "../Form";
 import { Close } from "../Icons";
+import * as XLSX from 'xlsx';
+
+
+const processExcelData = (readerResult, headerArray) => {
+	const workbook = XLSX.read(readerResult, { type: "binary" }); // Parse the binary data
+	const sheetName = workbook.SheetNames[0]; // Get the first sheet name (adjust if needed)
+	const worksheet = workbook.Sheets[sheetName];
+	const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: headerArray }); // Convert sheet to JSON
+	return jsonData;
+}
 
 
 const Upload = ({ message }) => {
@@ -16,7 +26,7 @@ const Upload = ({ message }) => {
 	}
 
 
-	const uploadHandler = (e) => {
+	const uploadHandler111 = (e) => {
 		if (file) {
 			const reader = new FileReader();
 			reader.onload = (() => {
@@ -40,6 +50,29 @@ const Upload = ({ message }) => {
 	}
 
 
+
+	const fileChangehandler = (e) => {
+		console.log(e.target.files[0]);
+		setFile(e.target.files[0]);
+	}
+
+
+	const uploadHandler = (e) => {
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = (() => {
+				const headerArray = ["id", "name", "dob", "gender", "disability", "disabilityNature", "fmName", "edn", "isMarried", "employeement", "religion", "device", "mobile", "village"];
+				const jsonArray = processExcelData(reader.result, headerArray);
+				console.log("jsonArray",jsonArray);
+			})
+			reader.readAsArrayBuffer(file);
+		} else {
+			console.log("Error!")
+		}
+	}
+
+
+
 	return (
 		<>
 			<div className={`fixed inset-0 py-16 bg-gray-900 ${show ? 'block' : 'hidden'}  bg-opacity-60 overflow-auto`}>
@@ -51,6 +84,7 @@ const Upload = ({ message }) => {
 
 					<div className="p-6 text-black">
 						<input type="file" onChange={(e) => { setFile(e.target.files[0]); }} className="w-full px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300" accept="application/javascript" />
+						<input type="file" onChange={fileChangehandler} className="w-full px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
 					</div>
 
 					<div className="px-6 py-6 flex justify-end items-center border-t border-gray-300">

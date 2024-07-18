@@ -37,6 +37,7 @@ const Layout = ({ children }) => {
                     </div>
                 </div>
             </section>
+
             <section className="fixed top-[60px] w-screen h-[calc(100vh-60px)] grid grid-cols-12">
                 <div className="col-span-3 lg:col-span-2 p-4 text-sm lg:text-base bg-[#2f2f2fff] flex flex-col justify-start space-y-2 overflow-auto">
                     <Link href="/dashboard" className="text-white hover:text-gray-500 font-bold cursor-pointer decoration-4">Home</Link>

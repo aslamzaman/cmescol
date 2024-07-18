@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextEn, BtnSubmit, TextDt, DropdownEn } from "@/components/Form";
 import { addItem, getItems } from "@/lib/LocalDatabase";
 import { formatedDate, myAge, isMobileCorrect } from "@/lib/utils";
-import { sortVillage } from "@/lib/utils";
+import { villageList } from "@/lib/utils/villagelist";
 
 
 
@@ -47,11 +47,9 @@ const Add = ({ message }) => {
     const showAddForm = () => {
         setShow(true);
         resetVariables();
-        const helper = getItems('helper');
-        const unit = helper.data.unit;
-        console.log(unit)
-        const v = sortVillage(unit);
-        setVillages(v);
+        const sessionUnit = sessionStorage.getItem('col_auth');
+        const sortVillage = villageList.filter(v=> v.name === sessionUnit);
+        setVillages(sortVillage);
         setSaveId(Date.now());
     }
 
@@ -128,6 +126,8 @@ const Add = ({ message }) => {
         }
     }
 
+    
+
     return (
         <>
             {show && (
@@ -200,7 +200,11 @@ const Add = ({ message }) => {
 
 
                                     <DropdownEn Title="Village" Id="village" Change={e => setVillage(e.target.value)} Value={village}>
-                                        {villages.length ? villages.map(village => <option value={village.name} key={village.id}>{village.name}</option>) : null}
+                                        {
+                                        villages.length ?
+                                       ( villages.map(village => <option value={village.village} key={village.id}>{village.village}</option>) )
+                                        : null
+                                        }
                                     </DropdownEn>
                                 </div>
 
