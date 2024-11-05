@@ -32,7 +32,7 @@ export default function Home() {
       const newJson = data.map((item, i) => {
         const daysCalculation = (Date.now() - new Date(item.DateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365);
         const yrs = Math.round(daysCalculation);
-        const Age = yrs < 12 || yrs > 65 ? '***' : yrs;
+        const Age = yrs < 12 || yrs > 80 ? '***' : yrs;
         //----------------------------------------
         const CorrectDate = formatedDate(item.DateOfBirth);
         //----------------------------------------
