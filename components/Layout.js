@@ -10,21 +10,6 @@ const Layout = ({ children }) => {
     const [unit, setUnit] = useState("");
     const router = useRouter();
 
-    useEffect(() => {
-        const getAuth = sessionStorage.getItem('col_auth');
-        if (getAuth) {
-            const unitName = UnitInfo.find(u => u.id === getAuth);
-            setUnit(getAuth, unitName.name);
-        } else {
-            router.push("/");
-        }
-
-        const getUser = sessionStorage.getItem('col_user');
-        if (getUser) {
-            setUser(getUser);
-        }
-    }, [router])
-
 
     return (
         <>

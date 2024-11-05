@@ -1,78 +1,105 @@
 "use client"
 import React, { useState } from "react";
-import { DropdownEn, BtnSubmit } from "@/components/Form";
-import { useRouter } from 'next/navigation'
+import { DropdownEn, BtnSubmit, TextNum } from "@/components/Form";
+import { formatedDate, sortArray } from "@/lib/utils";
+import { jsonDataFromExcelSheet, excelSheetFromJsonData, excelFormat } from "@/lib/FunctionsAll";
+
 
 export default function Home() {
-  const [user, setUser] = useState("");
+  const [data, setData] = useState([]);
   const [unit, setUnit] = useState("");
+  const [sl, setSl] = useState("");
   const [msg, setMsg] = useState("");
 
-  const router = useRouter();
+
+  const fileChangeHandler = async (e) => {
+    const response = await jsonDataFromExcelSheet(e.target.files[0], ["Name", "DateOfBirth", "Mobile"]);
+    console.log(response);
+    setData(response);
+  }
+
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (!data.length) {
+      setMsg("Please select an formated excel file.");
+      return false;
+    }
     setMsg("Please wait...");
+
+
     try {
-      const apiIp = `https://api.ipify.org`;
-      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/col`;
-      const response = await fetch(apiIp);
-      if (response.ok) {
-        const apiText = await response.text();
-        console.log(apiText);
-
-        const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user: unit, ip: apiText })
-        };
-
-        const responseData = await fetch(apiUrl, requestOptions);
-        if (responseData.ok) {
-          console.log("Ok");
-          sessionStorage.setItem('col_auth', unit);
-          sessionStorage.setItem('col_user', user);
-          router.push("/dashboard");
+      const newJson = data.map((item, i) => {
+        const daysCalculation = (Date.now() - new Date(item.DateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365);
+        const yrs = Math.round(daysCalculation);
+        const Age = yrs < 12 || yrs > 65 ? '***' : yrs;
+        //----------------------------------------
+        const CorrectDate = formatedDate(item.DateOfBirth);
+        //----------------------------------------
+        const mobile = item.Mobile.toString();
+        const CorrectMobile = mobile.length !== 11 || mobile.charAt(0) !== '0' ? '***' : mobile;
+        //----------------------------------------
+        const RegistrationCode = `CMES-${unit.trim()}-${sl + i}-${item.Name}`;
+        const LearnerId = `CMES-${unit.trim()}-${sl + i}`;
+        return {
+          ...item, Age, CorrectDate, CorrectMobile, RegistrationCode, LearnerId
         }
-      }
-      setMsg("");
+      })
+      console.log(newJson);
+
+      excelSheetFromJsonData(newJson);
+      //-------------------------------
+
     } catch (err) {
       console.log(err);
     }
   }
 
-  return (
-    <section className="w-screen h-[calc(100vh-50px)] p-4 border">
 
-      <div id="box" className="w-full lg:w-[500px] mx-auto p-4 border border-gray-200 mt-10 lg:mt-40 bg-gray-100 rounded-md shadow-md">
+
+
+
+  const downloadExcelFormat = () => {
+    try {
+      excelFormat();
+      return `Excel file has been successfully created.`;
+    } catch (error) {
+      console.error('Error exporting data to Excel:', error);
+    }
+  }
+
+
+
+
+
+  return (
+    <section className="w-screen h-screen p-4 border">
+
+      <div id="box" className="w-full lg:w-1/2 mx-auto mt-16 p-4 border border-gray-200 bg-gray-100 rounded-md shadow-md">
         <h1 className="w-full py-4 text-2xl text-gray-600 text-center font-bold uppercase underline">cmes col project</h1>
         <p className="w-full py-2 text-red-400 text-center">{msg}</p>
+
         <form onSubmit={submitHandler}>
-          <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} value={unit}>
-            <option value="suruj">Suruj</option>
-            <option value="gobratola">Gobratola</option>
-            <option value="jaldhaka">Jaldhaka</option>
-            <option value="deuty">Deuty</option>
-            <option value="khaserhat">Khaserhat</option>
-            <option value="damkura">Damkura</option>
-            <option value="jointiapur">Jointiapur</option>
-          </DropdownEn>
+          <div className="grid grid-cols-1 gap-4">
+            <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} value={unit}>
+              <option value="SRJ">SRJ</option>
+              <option value="NDR">NDR</option>
+              <option value="JAL">JAL</option>
+              <option value="DUT">DUT</option>
+              <option value="RNB">RNB</option>
+              <option value="DMK">DMK</option>
+              <option value="JNP">JNP</option>
+            </DropdownEn>
 
-          <DropdownEn Title="Select User" Id="user" Change={e => setUser(e.target.value)} Value={user}>
-            <option value="Md. Zohurul Haque">Md. Zohurul Haque</option>
-            <option value="Zakia Akter">Zakia Akter</option>
-            <option value="Aktera Khatun">Aktera Khatun</option>
-            <option value="Sabina Yesmin">Sabina Yesmin</option>
-            <option value="Md. Habibbur Rahman">Md. Habibbur Rahman</option>
-            <option value="Md. Suaibur Rahman">Md. Suaibur Rahman</option>
-            <option value="Md. Mizanur Rahman">Md. Mizanur Rahman</option>
-            <option value="Md. Sanaullah">Md. Sanaullah</option>
-            <option value="Md Shahin  Sarker">Md Shahin  Sarker</option>
-          </DropdownEn>
-
-
-          <BtnSubmit Title="Submit" Class="bg-blue-600 hover:bg-blue-800 text-white mt-6" />
+            <TextNum Title="Serial Start" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
+          </div>
+          <div className="w-full mt-4 flex items-center space-x-4">
+            <BtnSubmit Title="Submit" Class="bg-blue-600 hover:bg-blue-800 text-white" />
+            <input type="file" onChange={fileChangeHandler} className="w-full mt-4 px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300 cursor-pointer" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+          </div>
         </form>
+        <div className="w-full h-[2px] mt-4 bg-black"></div>
+        <button className="text-blue-600 underline py-4" onClick={downloadExcelFormat} >Download Excel Format</button>
       </div>
 
     </section>
