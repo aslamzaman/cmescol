@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { DropdownEn, BtnSubmit, TextNum } from "@/components/Form";
 import { formatedDate, dateDifferenceInDays } from "@/lib/utils";
 import { jsonDataFromExcelSheet, excelSheetFromJsonData, excelFormat } from "@/lib/FunctionsAll";
-
+import * as XLSX from 'xlsx';
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -11,11 +11,37 @@ export default function Home() {
   const [sl, setSl] = useState("");
   const [msg, setMsg] = useState("");
 
+  // If you run this code, date data becomes numeric instead of date.
+
+  function excelDateToJSDate(excelDate) {
+    // Excel's serial date format starts from January 0, 1900 (with a leap year bug)
+    const epochDate = new Date(1900, 0, 1);
+    const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
+
+    // Adjust for Excel's leap year bug
+    if (excelDate > 60) {
+      excelDate--;
+    }
+
+    const milliseconds = (excelDate - 1) * oneDay;
+    return new Date(epochDate.getTime() + milliseconds);
+  }
+
 
   const fileChangeHandler = async (e) => {
-    const response = await jsonDataFromExcelSheet(e.target.files[0], ["Name", "DateOfBirth", "Mobile"]);
-    console.log(response);
-    setData(response);
+    const headerArray = ["Name", "DateOfBirth", "Mobile"];
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const workbook = XLSX.read(reader.result, { type: "buffer" });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: headerArray });
+      const sliceData = jsonData.slice(1);
+      console.log(sliceData);
+      setData(sliceData);
+    }
+    reader.readAsArrayBuffer(e.target.files[0]);
   }
 
 
@@ -30,11 +56,20 @@ export default function Home() {
 
     try {
       const newJson = data.map((item, i) => {
-        const daysCalculation = dateDifferenceInDays(new Date(item.DateOfBirth), new Date(), true);
+        const dt = excelDateToJSDate(item.DateOfBirth);
+        const daysCalculation = dateDifferenceInDays(new Date(dt), new Date(), true);
         const yrs = daysCalculation / 365;
-        const Age = yrs < 12 || yrs > 80 ? '***' : Math.round(yrs);
+        /*
+        let Age = "";
+        if(!yrs || yrs < 12 || yrs > 80 ){
+          Age = "***";
+        }else{
+          Age =Math.round(yrs);
+        }
+          */
+        const Age = !yrs || yrs < 12 || yrs > 80 ? '***' : Math.round(yrs);
         //----------------------------------------
-        const CorrectDate = formatedDate(item.DateOfBirth).toString();
+        const CorrectDate = formatedDate(dt).toString();
         //----------------------------------------
         const mobile = parseInt(item.Mobile);
         const elevenDigit = "000000000000000000" + mobile;
@@ -44,11 +79,14 @@ export default function Home() {
         //----------------------------------------
         const stdSl = "0000000" + (parseInt(sl) + i);
         const stSL = stdSl.slice(-4);
-        console.log(stSL)
+       // console.log(stSL)
         const RegistrationCode = `CMES-${unit.trim()}-${stSL}-${item.Name}`;
         const LearnerId = `CMES-${unit.trim()}-${stSL}`;
         return {
-          ...item, Age, CorrectDate, CorrectMobile, RegistrationCode, LearnerId
+          Name: item.Name,
+          DateOfBirth: CorrectDate,
+          Mobile: item.Mobile,
+          Age, CorrectMobile, RegistrationCode, LearnerId
         }
       })
       console.log(newJson);
