@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { DropdownEn, BtnSubmit, TextNum } from "@/components/Form";
-import { formatedDate, sortArray } from "@/lib/utils";
+import { formatedDate, dateDifferenceInDays } from "@/lib/utils";
 import { jsonDataFromExcelSheet, excelSheetFromJsonData, excelFormat } from "@/lib/FunctionsAll";
 
 
@@ -30,17 +30,23 @@ export default function Home() {
 
     try {
       const newJson = data.map((item, i) => {
-        const daysCalculation = (Date.now() - new Date(item.DateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365);
-        const yrs = Math.round(daysCalculation);
-        const Age = yrs < 12 || yrs > 80 ? '***' : yrs;
+        const daysCalculation = dateDifferenceInDays(new Date(item.DateOfBirth), new Date(), true);
+        const yrs = daysCalculation / 365;
+        const Age = yrs < 12 || yrs > 80 ? '***' : Math.round(yrs);
         //----------------------------------------
-        const CorrectDate = formatedDate(item.DateOfBirth);
+        const CorrectDate = formatedDate(item.DateOfBirth).toString();
         //----------------------------------------
-        const mobile = item.Mobile.toString();
-        const CorrectMobile = mobile.length !== 11 || mobile.charAt(0) !== '0' ? '***' : mobile;
+        const mobile = parseInt(item.Mobile);
+        const elevenDigit = "000000000000000000" + mobile;
+        const fixedDigti = elevenDigit.slice(-11);
+
+        const CorrectMobile = fixedDigti.length !== 11 || fixedDigti.charAt(0) !== '0' ? '***' : fixedDigti.toString();
         //----------------------------------------
-        const RegistrationCode = `CMES-${unit.trim()}-${sl + i}-${item.Name}`;
-        const LearnerId = `CMES-${unit.trim()}-${sl + i}`;
+        const stdSl = "0000000" + (parseInt(sl) + i);
+        const stSL = stdSl.slice(-4);
+        console.log(stSL)
+        const RegistrationCode = `CMES-${unit.trim()}-${stSL}-${item.Name}`;
+        const LearnerId = `CMES-${unit.trim()}-${stSL}`;
         return {
           ...item, Age, CorrectDate, CorrectMobile, RegistrationCode, LearnerId
         }
