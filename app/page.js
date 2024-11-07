@@ -1,152 +1,235 @@
 "use client"
-import React, { useState } from "react";
-import { DropdownEn, BtnSubmit, TextNum } from "@/components/Form";
-import { formatedDate, dateDifferenceInDays } from "@/lib/utils";
-import { jsonDataFromExcelSheet, excelSheetFromJsonData, excelFormat } from "@/lib/FunctionsAll";
+import React, { useState, useEffect } from "react";
+import Edit from "@/components/participant/Edit";
+import Upload from "@/components/participant/Upload";
+import { DropdownEn, BtnSubmit, TextNum, TextEn } from "@/components/Form";
+import { formatedDate, dateDifferenceInDays, excelDateToJSDate, sortArray } from "@/lib/utils";
 import * as XLSX from 'xlsx';
+import { getDataFromIndexDB } from "@/lib/Database";
+
 
 export default function Home() {
-  const [data, setData] = useState([]);
-  const [unit, setUnit] = useState("");
-  const [sl, setSl] = useState("");
+  const [participants, setParticipants] = useState([]);
+  const [waitMsg, setWaitMsg] = useState("");
   const [msg, setMsg] = useState("");
 
-  // If you run this code, date data becomes numeric instead of date.
+  const [unit, setUnit] = useState("");
+  const [sl, setSl] = useState("");
 
-  function excelDateToJSDate(excelDate) {
-    // Excel's serial date format starts from January 0, 1900 (with a leap year bug)
-    const epochDate = new Date(1900, 0, 1);
-    const oneDay = 24 * 60 * 60 * 1000; // milliseconds in a day
+  const mobileCheck = (number) => {
+    const mobileStr = parseInt(number).toString();
+    const finalMobile = mobileStr.length !== 10 || mobileStr.charAt(0) !== '1' ? '999999999' : `${mobileStr}`;
+    return finalMobile;
+  }
 
-    // Adjust for Excel's leap year bug
-    if (excelDate > 60) {
-      excelDate--;
-    }
-
-    const milliseconds = (excelDate - 1) * oneDay;
-    return new Date(epochDate.getTime() + milliseconds);
+  const dtCheck = (dt) => {
+    const daysCalculation = (Date.now() - new Date(dt).getTime()) / (1000 * 60 * 60 * 24 * 365);
+    const yrs = Math.round(daysCalculation);
+    const finalDt = yrs < 12 || yrs > 60 ? "1900-01-01" : formatedDate(dt);
+    return finalDt;
   }
 
 
-  const fileChangeHandler = async (e) => {
-    const headerArray = ["Name", "DateOfBirth", "Mobile"];
+  useEffect(() => {
+    const load = async () => {
+      setWaitMsg('Please Wait...');
+      try {
+        const data = await getDataFromIndexDB("participant");
+        const checkData = data.map(item => {
+          return {
+            ...item,
+            dt: dtCheck(item.dt),
+            mobile: mobileCheck(item.mobile)
+          }
+        })
+        const result = checkData.sort((a, b) => sortArray(parseInt(a.id), parseInt(b.id)));
+        console.log(result);
+        setParticipants(result);
+        setWaitMsg('');
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    load();
+  }, [msg]);
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const workbook = XLSX.read(reader.result, { type: "buffer" });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: headerArray });
-      const sliceData = jsonData.slice(1);
-      console.log(sliceData);
-      setData(sliceData);
-    }
-    reader.readAsArrayBuffer(e.target.files[0]);
+
+  const messageHandler = (data) => {
+    setMsg(data);
   }
 
 
-  const submitHandler = async (e) => {
+
+
+  const handleCreate = async (e) => {
     e.preventDefault();
-    if (!data.length) {
-      setMsg("Please select an formated excel file.");
+    if (participants.length < 1) {
+      setMsg("No data found!");
       return false;
     }
     setMsg("Please wait...");
-
-
     try {
-      const newJson = data.map((item, i) => {
-        const dt = excelDateToJSDate(item.DateOfBirth);
-        const daysCalculation = dateDifferenceInDays(new Date(dt), new Date(), true);
-        const yrs = daysCalculation / 365;
-        /*
-        let Age = "";
-        if(!yrs || yrs < 12 || yrs > 80 ){
-          Age = "***";
-        }else{
-          Age =Math.round(yrs);
-        }
-          */
-        const Age = !yrs || yrs < 12 || yrs > 80 ? '***' : Math.round(yrs);
-        //----------------------------------------
-        const CorrectDate = formatedDate(dt).toString();
-        //----------------------------------------
-        const mobile = parseInt(item.Mobile);
-        const elevenDigit = "000000000000000000" + mobile;
-        const fixedDigti = elevenDigit.slice(-11);
+      const newData = { unit: unit, sl: sl, participants: participants };
+      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/format`;
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newData)
+      };
 
-        const CorrectMobile = fixedDigti.length !== 11 || fixedDigti.charAt(0) !== '0' ? '***' : fixedDigti.toString();
-        //----------------------------------------
-        const stdSl = "0000000" + (parseInt(sl) + i);
-        const stSL = stdSl.slice(-4);
-       // console.log(stSL)
-        const RegistrationCode = `CMES-${unit.trim()}-${stSL}-${item.Name}`;
-        const LearnerId = `CMES-${unit.trim()}-${stSL}`;
-        return {
-          Name: item.Name,
-          DateOfBirth: CorrectDate,
-          Mobile: item.Mobile,
-          Age, CorrectMobile, RegistrationCode, LearnerId
-        }
-      })
-      console.log(newJson);
+      const response = await fetch(apiUrl, requestOptions);
 
-      excelSheetFromJsonData(newJson);
-      //-------------------------------
-
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-
-
-
-
-  const downloadExcelFormat = () => {
-    try {
-      excelFormat();
-      return `Excel file has been successfully created.`;
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "Attendance.xlsx";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        console.log("Excel file created and downloaded.");
+      } else {
+        throw new Error("Failed to create Excel file");
+      }
+      setMsg("");
     } catch (error) {
-      console.error('Error exporting data to Excel:', error);
+      console.error("Error saving data:", error);
+    }
+
+  }
+
+
+
+
+  const downloadExcelFormat = async (e) => {
+    e.preventDefault();
+    setMsg("Please wait...");
+    try {
+      const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/format`;
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      };
+
+      const response = await fetch(apiUrl, requestOptions);
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "Format.xlsx";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        console.log("Excel file created and downloaded.");
+      } else {
+        throw new Error("Failed to create Excel file");
+      }
+      setMsg("");
+    } catch (error) {
+      console.error("Error saving data:", error);
     }
   }
+
 
 
 
 
 
   return (
-    <section className="w-screen h-screen p-4 border">
-
-      <div id="box" className="w-full lg:w-1/2 mx-auto mt-16 p-4 border border-gray-200 bg-gray-100 rounded-md shadow-md">
-        <h1 className="w-full py-4 text-2xl text-gray-600 text-center font-bold uppercase underline">cmes col project</h1>
-        <p className="w-full py-2 text-red-400 text-center">{msg}</p>
-
-        <form onSubmit={submitHandler}>
-          <div className="grid grid-cols-1 gap-4">
-            <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} value={unit}>
-              <option value="SRJ">SRJ</option>
-              <option value="NDR">NDR</option>
-              <option value="JAL">JAL</option>
-              <option value="DUT">DUT</option>
-              <option value="RNB">RNB</option>
-              <option value="DMK">DMK</option>
-              <option value="JNP">JNP</option>
-            </DropdownEn>
-
-            <TextNum Title="Serial Start" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
-          </div>
-          <div className="w-full mt-4 flex items-center space-x-4">
-            <BtnSubmit Title="Submit" Class="bg-blue-600 hover:bg-blue-800 text-white" />
-            <input type="file" onChange={fileChangeHandler} className="w-full mt-4 px-4 py-1.5 text-gray-600 ring-1 focus:ring-4 ring-blue-300 outline-none rounded duration-300 cursor-pointer" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-          </div>
-        </form>
-        <div className="w-full h-[2px] mt-4 bg-black"></div>
-        <button className="text-blue-600 underline py-4" onClick={downloadExcelFormat} >Download Excel Format</button>
+    <>
+      <div className="w-full mb-3 mt-8">
+        <h1 className="w-full text-xl lg:text-3xl font-bold text-center text-blue-700">CMES COL PROJECT</h1>
+        <p className="w-full text-center text-blue-300">&nbsp;{waitMsg}&nbsp;</p>
       </div>
 
-    </section>
 
-  );
+      <div className="px-4 lg:px-6">
+        <div className="w-full grid grid-cols-1 gap-y-4">
+
+
+
+
+          <div className="w-full col-span-2 border-2 p-4 shadow-md rounded-md">
+            <div className="px-4 lg:px-6 overflow-auto">
+              <p className="w-full text-sm text-red-700">{msg}</p>
+
+
+
+              <div className="overflow-auto">
+                <div className="w-full flex justify-end">
+                  <div className="w-auto flex items-center">
+                    <Upload message={messageHandler} />
+                  </div>
+                </div>
+
+                <table className="w-full border border-gray-200">
+                  <thead>
+                    <tr className="w-full bg-gray-200">
+                      <th className="text-start border-b border-gray-200 px-4 py-2">Name</th>
+                      <th className="text-center border-b border-gray-200 px-4 py-2">Date</th>
+                      <th className="text-center border-b border-gray-200 px-4 py-2">Mobile</th>
+                      <th className="w-[100px] font-normal">
+                        <div className="w-full flex justify-end items-center pr-2.5 font-normal">
+
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      participants.length ? participants.map(participant => {
+                        return (
+                          <tr className="border-b border-gray-200 hover:bg-gray-100" key={participant.id}>
+                            <td className="text-start py-2 px-4">{participant.name}</td>
+                            <td className={`text-center py-2 px-4 ${participant.dt === '1900-01-01' ? 'line-through font-bold' : 'no-underline font-normal'}`}>{participant.dt}</td>
+                            <td className={`text-center py-2 px-4 ${participant.mobile === '999999999' ? 'line-through font-bold' : 'no-underline font-normal'}`}>0{participant.mobile}</td>
+                            <td className="flex justify-end items-center mt-1">
+                              <Edit message={messageHandler} id={participant.id} data={participant} />
+                            </td>
+                          </tr>
+                        )
+                      })
+                        : null
+                    }
+                  </tbody>
+                </table>
+
+              </div>
+
+
+
+            </div>
+          </div>
+
+          <div className="w-full border-2 p-4 mb-32 shadow-md rounded-md">
+            <form onSubmit={handleCreate}>
+              <div className="grid grid-cols-1 gap-2 my-2">
+                <DropdownEn Title="Select Unit" Change={e => setUnit(e.target.value)} value={unit}>
+                  <option value="SRJ">SRJ</option>
+                  <option value="NDR">NDR</option>
+                  <option value="JAL">JAL</option>
+                  <option value="DUT">DUT</option>
+                  <option value="RNB">RNB</option>
+                  <option value="DMK">DMK</option>
+                  <option value="JNP">JNP</option>
+                </DropdownEn>
+                <TextNum Title="Serial Start" Id="sl" Change={e => setSl(e.target.value)} Value={sl} />
+              </div>
+              <div className="w-full flex justify-start">
+                <BtnSubmit Title="Generate" Class="bg-blue-600 hover:bg-blue-800 text-white" />
+              </div>
+            </form>
+            <button className="text-blue-600 underline py-4" onClick={downloadExcelFormat} >Download Excel Format</button>
+          </div>
+
+
+
+        </div>
+      </div>
+    </>
+  )
+
 }
