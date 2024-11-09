@@ -56,14 +56,6 @@ export const POST = async (Request) => {
         //---------------------------------------------------------
 
 
-
-        /*
-                //Style
-                sheet.cell("C1").formula("SUM(C1:C3)").style({ fill: 'bfdbf5', fontSize: 10, border: true, bold: true, horizontalAlignment: 'center', verticalAlignment: 'center' });
-                // or
-                sheet.cell('D1').value("Attendance sheet").style({ fill: '5b92e5', horizontalAlignment: 'center', verticalAlignment: 'center' });
-        */
-
         sheet.column("A").width(30).hidden(false);
         sheet.column("B").width(20).hidden(false);
         sheet.column("C").width(20).hidden(false);
@@ -88,14 +80,18 @@ export const POST = async (Request) => {
             const fourDigit =  `0000000${parseInt(data.sl)+ i}`;
             const reg = `CMES-${data.unit}-${fourDigit.slice(-4)}-${item.name}`;
             const lId = `CMES-${data.unit}-${fourDigit.slice(-4)}`;
-            sheet.cell(`A${i + 2}`).value(`${item.name}`).style({ horizontalAlignment: 'left', verticalAlignment: 'center' });
-            sheet.cell(`B${i + 2}`).value(`${item.dt}`).style({ numberFormat: 'YYYY-MM-DD', horizontalAlignment: 'center', verticalAlignment: 'center' });
-            sheet.cell(`C${i + 2}`).value(`0${item.mobile}`).style({ horizontalAlignment: 'center', verticalAlignment: 'center' });
-            sheet.cell(`D${i + 2}`).value(`${age(item.dt)}`).style({ horizontalAlignment: 'center', verticalAlignment: 'center' });
-            sheet.cell(`E${i + 2}`).value(`${reg}`).style({ horizontalAlignment: 'left', verticalAlignment: 'center' });
-            sheet.cell(`F${i + 2}`).value(`${lId}`).style({ horizontalAlignment: 'center', verticalAlignment: 'center' });
-        })
+           const createMobile = '00000000000000'+item.mobile;
+           const finalMobile = createMobile.slice(-11);
+            const newDt = new Date(item.dt);
 
+            sheet.cell(`A${i + 2}`).value(item.name).style({numberFormat: '@', horizontalAlignment: 'left', verticalAlignment: 'center' });
+            sheet.cell(`B${i + 2}`).value(newDt).style({ numberFormat: 'MM/DD/YYYY', horizontalAlignment: 'center', verticalAlignment: 'center' });
+            sheet.cell(`C${i + 2}`).value(finalMobile).style({numberFormat: '@', horizontalAlignment: 'center', verticalAlignment: 'center' });
+            sheet.cell(`D${i + 2}`).value(age(item.dt)).style({numberFormat: '#,##0_);(#,##0)', horizontalAlignment: 'center', verticalAlignment: 'center' });
+            sheet.cell(`E${i + 2}`).value(reg).style({numberFormat: '@', horizontalAlignment: 'left', verticalAlignment: 'center' });
+            sheet.cell(`F${i + 2}`).value(lId).style({numberFormat: '@', horizontalAlignment: 'center', verticalAlignment: 'center' });
+        })
+       
 
         // Generate the Excel file as a buffer
         const buffer = await workbook.outputAsync();
