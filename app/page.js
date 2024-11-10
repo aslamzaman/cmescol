@@ -84,7 +84,7 @@ export default function Home() {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = "Attendance.xlsx";
+        a.download = "Formater.xlsx";
         document.body.appendChild(a);
         a.click();
         a.remove();
